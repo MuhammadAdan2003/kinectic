@@ -292,6 +292,10 @@ All core UI primitives MUST use strongly typed TypeScript props (union variants,
 - [x] **Removed All Text Slashes and Blinking Dots**:
   - Eliminated all occurrences of `//` and standalone text `/` across all headings, eyebrows, data files, footer, and navigation. Replaced with clean brutalist bullets `•`, em-dashes `—`, or words.
   - Removed all blinking dots (`animate-pulse`, `animate-ping`) from `FloatingNavbar` (`2 Q4 SPOTS`), `HomePage` eyebrow, `PullCurtainMenu`, and `ThermalShutterOverlay`.
+- [x] **Configured Production `netlify.toml` File**:
+  - Defined build command (`npm run build`), publish directory (`dist`), and Node runtime (`NODE_VERSION = "20"`).
+  - Configured SPA 200 rewrite rule (`/* -> /index.html 200`) so TanStack Router client-side routes (`/services`, `/process`, `/work/:slug`) resolve properly without 404s on page reloads or deep links.
+  - Added HTTP caching for immutable hashed assets in `/assets/*` and standard security headers (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`).
 - [x] **Configured Production `.gitignore` File**:
   - Added clean, comprehensive git exclusion rules for `node_modules/`, `dist/`, `dist-ssr/`, `.tanstack/`, `.playwright-mcp/`, `tsconfig.tsbuildinfo`, `.env*.local`, IDE configs (`.idea/`, `.vscode/*`), OS metadata (`.DS_Store`, `Thumbs.db`), and debug logs.
   - Verified with `git status` that all build outputs and dependencies are cleanly ignored.
