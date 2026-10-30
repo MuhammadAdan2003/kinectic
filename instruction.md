@@ -357,6 +357,36 @@ All core UI primitives MUST use strongly typed TypeScript props (union variants,
   - Removed confusing hanging ceiling tab.
   - Integrated dedicated `INDEX` / `CLOSE` pill button directly into `FloatingNavbar.tsx` alongside live audio `EqualizerWave` and clean static `2 Q4 SPOTS` indicator.
   - Controlled cleanly via `isMenuOpen` in `TransitionContext.tsx`.
+- [x] **Minimalist Black Preloader with Horizontal Middle-Cut Vault Split (`StudioPreloader.tsx`)**:
+  - Restyled preloader to strict minimalist aesthetics: deep black surface (`bg-ink` / `#121110`), single `● KINETIC® STUDIO` pill logo mark, monumental `0%` to `100%` counter, and brutalist lime progress bar with `00 LOADING ASSETS 100` indicator.
+  - Stripped all extraneous text, latency readouts, and tear seam markers per user instruction ("just keep loading screen simple just one logo type image and progress bar and 0 to 100").
+  - On reaching 100%, the screen cuts cleanly at 50% screen height:
+    - **Top Half** smoothly slides UP (`yPercent: -100`, `ease: "power4.inOut"`, 0.85s).
+    - **Bottom Half** smoothly slides DOWN (`yPercent: 100`, `ease: "power4.inOut"`, 0.85s).
+  - Emits `setIsInitialLoaded(true)` to trigger hero intro sequence precisely as the split cut begins.
+- [x] **Hero Entrance Animation Orchestrator (`HomePage.tsx`)**:
+  - Wired `isInitialLoaded` from `TransitionContext` to drive a coordinated post-loading GSAP timeline:
+    - **Eyebrow Header Strip**: Glides down `y: -30 -> 0, opacity: 0 -> 1` (0.75s, `power3.out`).
+    - **Monumental Headline Lines**: Slides smoothly up through overflow line masks `yPercent: 125 -> 0, opacity: 0 -> 1` with subtle resting rotation (1.15s, `power4.out`).
+    - **Overlapping Sticker Badges**: All 10 tactile badges (`40% OFF`, `+$48.2K`, `SOLD OUT`, `BrutalStar`, `CursorPointer`, `6.4X ROAS`, `-42% CPA`, barcode, curved arrow callout, draggable badges) pop in with spring bounce `scale: 0 -> 1, opacity: 0 -> 1` (`stagger: 0.07`, `ease: "back.out(2)"`).
+    - **Bottom Bar**: Description, CTA buttons, and rotating stamp slide up `y: 40 -> 0, opacity: 0 -> 1` (0.85s, `power3.out`).
+- [x] **Site-Wide Scroll Reveal Primitive (`ScrollReveal.tsx`)**:
+  - Created canonical, reusable `ScrollReveal` component with variants (`fade-up`, `fade-down`, `fade-left`, `fade-right`, `zoom-in`, `scale-up`), configurable delay, distance, stagger, and automatic GSAP `ScrollTrigger` cleanup.
+  - Wrapped all major sections across `HomePage.tsx` so headings, text, cards, and forms smoothly reveal on scrolling:
+    - **Marquees**: Smooth upward reveal into view.
+    - **Manifesto**: Eyebrow strip, body paragraph, and sprint theme pills reveal on scroll alongside word scrub illumination.
+    - **Selected Work**: Work showcase console scales and glides up with brutalist presence.
+    - **The Receipts**: Eyebrow, headline, 3-column KPI metrics, and thermal receipt reveal with staggered motion.
+    - **Contact Brief**: Split-column entrance with left info sliding in from left and the contact form sliding in from right.
+- [x] **Mobile Elastic "PULL ME DOWN" Small Page Pull Tab (`MobilePullDownTab.tsx`)**:
+  - Replaced the conventional mobile hamburger with a tactile neo-brutalist small notepad page tag hanging down from the top ceiling (`fixed top-0 left-1/2 -translate-x-1/2 z-[110] md:hidden`).
+  - **Tactile Paper Aesthetics**: Warm editorial paper background (`bg-paper`), crisp brutalist border (`2px solid var(--ink)`), tomato red tape strip connecting to ceiling, dashed notebook ruled line, bottom dog-ear corner fold, and 3-dot gripper handle.
+  - **Bold Microcopy & Animation**: `PULL ME DOWN ↓` with bouncing red arrow; flips to `RELEASE! ↑` and acid lime highlight (`bg-lime text-forest border-forest`) when pulled past threshold.
+  - **Realistic Elastic Physics**: Powered by damped elastic drag formula (`Math.pow(deltaY, 0.84) * 1.4`) with dynamic tension line stretching from the ceiling.
+    - If pulled > 50px (or fast downward flick): smoothly springs down and opens the full-screen curtain directory (`setIsMenuOpen(true)`).
+    - If released early: springs elastically back to the ceiling with authentic recoil physics (`gsap.to(..., { ease: "elastic.out(1.15, 0.4)" })`).
+    - If tapped/clicked: plays a quick satisfying spring bounce and opens the menu.
+  - **Pull Curtain Polish (`PullCurtainMenu.tsx`)**: Fixed inline transform conflict; added touch swipe-up gesture detection (`deltaY < -60`) and a dedicated mobile `↑ PUSH UP TO CLOSE` pill button for effortless one-handed dismissal.
 - [x] **Built Canonical Reusable Accordion Primitive with Buttery Smooth Easing**:
   - Created `src/components/ui/Accordion.tsx` (`Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`) with strongly typed variants (`bordered`, `line`, `elevated`) and surfaces (`paper`, `paper-2`, `ink`, `lime`).
   - Implemented silky smooth CSS Grid expansion (`grid-template-rows: 0fr -> 1fr`) powered by `--ease-out` (`cubic-bezier(0.16, 1, 0.3, 1)`) and staggered `translateY(-8px) -> translateY(0)` content glide with zero layout jumping.

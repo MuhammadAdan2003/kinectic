@@ -3,16 +3,24 @@ import { siteConfig } from "@/data/siteConfig";
 import { TransitionLink } from "@/components/ui/TransitionLink";
 import { useTransition } from "@/context/TransitionContext";
 import { useGSAP, gsap } from "@/lib/gsap";
-import { X, ArrowUpRight } from "lucide-react";
+import { X, ArrowUpRight, ArrowUp } from "lucide-react";
 
 export const PullCurtainMenu: React.FC = () => {
   const { isMenuOpen, setIsMenuOpen } = useTransition();
   const curtainRef = useRef<HTMLDivElement>(null);
   const linksContainerRef = useRef<HTMLDivElement>(null);
+  const touchStartYRef = useRef(0);
+  const isFirstRender = useRef(true);
 
   useGSAP(
     () => {
       if (!curtainRef.current) return;
+
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        gsap.set(curtainRef.current, { yPercent: -100 });
+        return;
+      }
 
       if (isMenuOpen) {
         document.body.style.overflow = "hidden";
@@ -51,11 +59,24 @@ export const PullCurtainMenu: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKey);
   }, [isMenuOpen, setIsMenuOpen]);
 
+  // Touch swipe up to close gesture
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartYRef.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
+    if (deltaY < -60) {
+      setIsMenuOpen(false);
+    }
+  };
+
   return (
     <div
       ref={curtainRef}
-      style={{ transform: "translateY(-100%)" }}
-      className="fixed inset-0 z-[160] bg-lime text-forest flex flex-col justify-between p-[var(--gutter)] pt-16 md:pt-20 border-b-4 border-ink overflow-y-auto"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      className="fixed inset-0 z-[160] bg-lime text-forest flex flex-col justify-between p-[var(--gutter)] pt-16 md:pt-20 border-b-4 border-ink overflow-y-auto transform-gpu"
     >
       {/* Top Header inside Curtain */}
       <div className="flex items-center justify-between border-b-2 border-forest/30 pb-6">
@@ -80,7 +101,7 @@ export const PullCurtainMenu: React.FC = () => {
       {/* Big Route Links */}
       <div
         ref={linksContainerRef}
-        className="my-auto py-10 flex flex-col gap-4 md:gap-6"
+        className="my-auto py-8 sm:py-10 flex flex-col gap-3 sm:gap-4 md:gap-6"
       >
         {siteConfig.navRoutes.map((route) => (
           <div key={route.path} className="group">
@@ -88,15 +109,15 @@ export const PullCurtainMenu: React.FC = () => {
               to={route.path}
               transitionTitle={route.transitionTitle}
               onClick={() => setIsMenuOpen(false)}
-              className="flex items-baseline gap-4 md:gap-8 group-hover:translate-x-3 transition-transform"
+              className="flex items-baseline gap-3 sm:gap-4 md:gap-8 group-hover:translate-x-3 transition-transform"
             >
-              <span className="font-mono text-sm md:text-xl font-bold opacity-60">
+              <span className="font-mono text-sm sm:text-base md:text-xl font-bold opacity-60">
                 ({route.index})
               </span>
-              <span className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase tracking-tight leading-none group-hover:underline underline-offset-8">
+              <span className="font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl uppercase tracking-tight leading-none group-hover:underline underline-offset-8">
                 {route.label}
               </span>
-              <ArrowUpRight className="w-8 h-8 md:w-14 md:h-14 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowUpRight className="w-6 h-6 sm:w-8 sm:h-8 md:w-14 md:h-14 opacity-0 group-hover:opacity-100 transition-opacity" />
             </TransitionLink>
           </div>
         ))}
@@ -107,21 +128,32 @@ export const PullCurtainMenu: React.FC = () => {
             to="/#work"
             transitionTitle="SELECTED WORK"
             onClick={() => setIsMenuOpen(false)}
-            className="flex items-baseline gap-4 md:gap-8 group-hover:translate-x-3 transition-transform"
+            className="flex items-baseline gap-3 sm:gap-4 md:gap-8 group-hover:translate-x-3 transition-transform"
           >
-            <span className="font-mono text-sm md:text-xl font-bold opacity-60">
+            <span className="font-mono text-sm sm:text-base md:text-xl font-bold opacity-60">
               (04)
             </span>
-            <span className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase tracking-tight leading-none group-hover:underline underline-offset-8">
+            <span className="font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl uppercase tracking-tight leading-none group-hover:underline underline-offset-8">
               Work
             </span>
-            <ArrowUpRight className="w-8 h-8 md:w-14 md:h-14 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <ArrowUpRight className="w-6 h-6 sm:w-8 sm:h-8 md:w-14 md:h-14 opacity-0 group-hover:opacity-100 transition-opacity" />
           </TransitionLink>
         </div>
       </div>
 
+      {/* Push Up To Close Tactile Bar for Mobile */}
+      <div className="flex md:hidden justify-center py-2">
+        <button
+          onClick={() => setIsMenuOpen(false)}
+          className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-forest text-lime border-2 border-forest rounded-full font-mono text-[11px] font-bold uppercase tracking-wider shadow-brutal-sm cursor-pointer"
+        >
+          <ArrowUp className="w-3.5 h-3.5 animate-bounce" />
+          <span>PUSH UP TO CLOSE</span>
+        </button>
+      </div>
+
       {/* Bottom Drawer Meta Info */}
-      <div className="pt-6 border-t-2 border-forest/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 font-mono text-xs md:text-sm">
+      <div className="pt-5 border-t-2 border-forest/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6 font-mono text-xs md:text-sm">
         <div>
           <span className="block opacity-60 uppercase text-[10px]">Direct Studio Line</span>
           <a href={`mailto:${siteConfig.email}`} className="font-bold underline">
@@ -129,7 +161,7 @@ export const PullCurtainMenu: React.FC = () => {
           </a>
         </div>
 
-        <div className="flex flex-wrap items-center gap-6">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6">
           {siteConfig.socials.map((soc) => (
             <a
               key={soc.label}
