@@ -9,6 +9,8 @@ interface TransitionContextType {
   transitionTitle: string;
   isMenuOpen: boolean;
   setIsMenuOpen: (open: boolean) => void;
+  isInitialLoaded: boolean;
+  setIsInitialLoaded: (loaded: boolean) => void;
   navigateWithTransition: (to: string, title?: string) => Promise<void>;
   registerShutter: (methods: ShutterMethods) => void;
 }
@@ -26,6 +28,7 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [transitionTitle, setTransitionTitle] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isInitialLoaded, setIsInitialLoaded] = useState(false);
   const shutterRef = useRef<ShutterMethods | null>(null);
 
   // Initialize Lenis smooth inertia scroll on client mount
@@ -117,6 +120,8 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         transitionTitle,
         isMenuOpen,
         setIsMenuOpen,
+        isInitialLoaded,
+        setIsInitialLoaded,
         navigateWithTransition,
         registerShutter,
       }}

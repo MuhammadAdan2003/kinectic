@@ -28,4 +28,6 @@ export * from "./svg/ScrollSpinStarSvg";
 export * from "./ScrollInShape";
 export * from "./svg/ScrollJourneyTrack";
 export * from "./svg/BackgroundRoadLine";
+export * from "./StudioPreloader";
+export * from "./ScrollReveal";
 

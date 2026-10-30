@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import { homeContent } from "@/data/homeContent";
-import { workProjects } from "@/data/workContent";
 import { StickerBadge } from "@/components/ui/StickerBadge";
 import { RotatingStamp } from "@/components/ui/RotatingStamp";
 import { MarqueeTape } from "@/components/ui/MarqueeTape";
@@ -16,16 +15,90 @@ import { ScrollGrowthChartSvg } from "@/components/ui/svg/ScrollGrowthChartSvg";
 import { ScrollSnakeSvg } from "@/components/ui/svg/ScrollSnakeSvg";
 import { ScrollSpinStarSvg } from "@/components/ui/svg/ScrollSpinStarSvg";
 import { ScrollInShape } from "@/components/ui/ScrollInShape";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { BackgroundRoadLine } from "@/components/ui/svg/BackgroundRoadLine";
+import { WorkShowcaseConsole } from "@/components/sections/WorkShowcaseConsole";
 import { useGSAP, gsap } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { useTransition } from "@/context/TransitionContext";
+import { ArrowRight } from "lucide-react";
 
 export const HomePage: React.FC = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const manifestoRef = useRef<HTMLDivElement>(null);
+  const heroEyebrowRef = useRef<HTMLDivElement>(null);
   const heroHeadingRef = useRef<HTMLDivElement>(null);
+  const heroLine1Ref = useRef<HTMLDivElement>(null);
+  const heroItalicRef = useRef<HTMLDivElement>(null);
+  const heroLine2Ref = useRef<HTMLDivElement>(null);
+  const heroBottomRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const { isInitialLoaded } = useTransition();
+
+  // Hero entrance animation orchestrator (fires right as preloader split starts)
+  useGSAP(
+    () => {
+      if (!isInitialLoaded) return;
+      if (prefersReducedMotion) return;
+
+      const tl = gsap.timeline({ delay: 0.08 });
+
+      // 1. Eyebrow strip slides down
+      if (heroEyebrowRef.current) {
+        tl.fromTo(
+          heroEyebrowRef.current,
+          { y: -30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.75, ease: "power3.out" }
+        );
+      }
+
+      // 2. Monumental headline lines slide up through line masks
+      const lines = [heroLine1Ref.current, heroItalicRef.current, heroLine2Ref.current].filter(Boolean);
+      if (lines.length > 0) {
+        tl.fromTo(
+          lines,
+          { yPercent: 125, rotate: (i) => (i === 1 ? 0 : i === 0 ? 3 : -3), opacity: 0 },
+          {
+            yPercent: 0,
+            rotate: 0,
+            opacity: 1,
+            duration: 1.15,
+            stagger: 0.12,
+            ease: "power4.out",
+          },
+          "-=0.55"
+        );
+      }
+
+      // 3. Tactile sticker badges pop in with bouncy spring
+      const stickers = heroHeadingRef.current?.querySelectorAll(".hero-pop-sticker");
+      if (stickers && stickers.length > 0) {
+        tl.fromTo(
+          stickers,
+          { scale: 0, opacity: 0, transformOrigin: "center center" },
+          {
+            scale: 1,
+            opacity: 1,
+            stagger: 0.07,
+            duration: 0.65,
+            ease: "back.out(2)",
+          },
+          "-=0.6"
+        );
+      }
+
+      // 4. Hero bottom bar slides up
+      if (heroBottomRef.current) {
+        tl.fromTo(
+          heroBottomRef.current,
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.85, ease: "power3.out" },
+          "-=0.5"
+        );
+      }
+    },
+    { dependencies: [isInitialLoaded, prefersReducedMotion] }
+  );
 
   // Scroll-scrubbed illumination animation for Manifesto text
   useGSAP(
@@ -62,9 +135,15 @@ export const HomePage: React.FC = () => {
       {/* =====================================================================
           01 HERO SECTION (Centered, Monumental, Full-Bleed Out-of-Container, Overlapping Icons)
           ===================================================================== */}
-      <section id="hero" className="paper-tex relative min-h-[96vh] flex flex-col justify-between items-center text-center bg-paper text-ink px-[var(--gutter)] pt-28 pb-10 border-b-2 border-ink overflow-hidden">
+      <section
+        id="hero"
+        className="paper-tex relative min-h-[96vh] flex flex-col justify-between items-center text-center bg-paper text-ink px-[var(--gutter)] pt-28 pb-10 border-b-2 border-ink overflow-hidden"
+      >
         {/* Top Eyebrow Header Strip */}
-        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 border-b-2 border-ink/20 pb-4 relative z-20">
+        <div
+          ref={heroEyebrowRef}
+          className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 border-b-2 border-ink/20 pb-4 relative z-20"
+        >
           <SectionEyebrow index="01" label={homeContent.eyebrow.replace(/^\(01\)\s*/, "")} />
 
           <div className="flex items-center gap-2">
@@ -86,7 +165,7 @@ export const HomePage: React.FC = () => {
           className="my-auto py-8 sm:py-12 w-full flex flex-col items-center justify-center relative select-none z-20"
         >
           {/* Overlapping Floating Sticker Group 1 (Top Left Overlap on MAKE) */}
-          <div className="absolute top-[8%] left-[10%] sm:left-[16%] lg:left-[22%] z-20 pointer-events-auto transform -rotate-6 hover:rotate-0 hover:scale-110 transition-transform">
+          <div className="hero-pop-sticker absolute top-[8%] left-[10%] sm:left-[16%] lg:left-[22%] z-20 pointer-events-auto transform -rotate-6 hover:rotate-0 hover:scale-110 transition-transform">
             <div className="flex flex-col items-center">
               <span className="px-3.5 py-1.5 bg-sun text-ink border-2 border-ink rounded-full shadow-brutal font-mono text-xs font-bold uppercase tracking-wider">
                 40% OFF
@@ -94,80 +173,68 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
 
-          <div className="absolute top-[18%] left-[2%] sm:left-[8%] lg:left-[14%] z-20 pointer-events-auto transform rotate-12 hover:rotate-0 hover:scale-110 transition-transform hidden sm:block">
+          <div className="hero-pop-sticker absolute top-[18%] left-[2%] sm:left-[8%] lg:left-[14%] z-20 pointer-events-auto transform rotate-12 hover:rotate-0 hover:scale-110 transition-transform hidden sm:block">
             <span className="px-3 py-1 bg-pink text-ink border-2 border-ink rounded-full shadow-brutal-sm font-mono text-xs font-bold uppercase">
               +$48.2K TODAY
             </span>
           </div>
 
-          <div className="absolute top-[4%] right-[14%] sm:right-[20%] lg:right-[26%] z-20 pointer-events-auto transform rotate-6 hover:rotate-0 hover:scale-110 transition-transform">
+          <div className="hero-pop-sticker absolute top-[4%] right-[14%] sm:right-[20%] lg:right-[26%] z-20 pointer-events-auto transform rotate-6 hover:rotate-0 hover:scale-110 transition-transform">
             <span className="px-3.5 py-1.5 bg-lime text-forest border-2 border-ink rounded-full shadow-brutal font-mono text-xs font-bold uppercase tracking-wider">
               SOLD OUT
             </span>
           </div>
 
           {/* Overlapping Brutalist SVG Geometric Star on NOISE */}
-          <div className="absolute top-[28%] right-[6%] sm:right-[12%] lg:right-[18%] z-20 pointer-events-none transform -rotate-12">
+          <div className="hero-pop-sticker absolute top-[28%] right-[6%] sm:right-[12%] lg:right-[18%] z-20 pointer-events-none transform -rotate-12">
             <BrutalStar size={38} color="lime" />
           </div>
 
           {/* Overlapping Cursor Pointer directly indicating headline */}
-          <div className="absolute top-[38%] left-[5%] sm:left-[12%] lg:left-[18%] z-20 pointer-events-none transform rotate-12 hidden md:block">
+          <div className="hero-pop-sticker absolute top-[38%] left-[5%] sm:left-[12%] lg:left-[18%] z-20 pointer-events-none transform rotate-12 hidden md:block">
             <CursorPointer color="pink" label="THUMBSTOPPED" />
           </div>
 
-          {/* MAIN MONUMENTAL DISPLAY HEADLINE */}
+          {/* MAIN MONUMENTAL DISPLAY HEADLINE (Masked line slides for buttery post-loader reveal) */}
           <h1 className="font-display text-[clamp(60px,14.5vw,230px)] uppercase tracking-tight leading-[0.84] text-ink text-center max-w-none">
-            <div className="relative inline-block">
-              <MaskedText
-                text={homeContent.headlineLine1}
-                splitBy="lines"
-                trigger="load"
-                delay={0.15}
-                duration={1.2}
-              />
+            <div className="relative inline-block overflow-hidden py-1">
+              <div ref={heroLine1Ref} className="will-change-transform inline-block">
+                {homeContent.headlineLine1}
+              </div>
             </div>
 
-            <div className="block text-forest font-serif italic lowercase font-normal text-[0.75em] sm:text-[0.82em] leading-none my-1 tracking-normal">
-              <MaskedText
-                text="and then"
-                splitBy="words"
-                trigger="load"
-                delay={0.3}
-                duration={1.1}
-              />
+            <div className="block text-forest font-serif italic lowercase font-normal text-[0.75em] sm:text-[0.82em] leading-none my-1 tracking-normal overflow-hidden py-1">
+              <div ref={heroItalicRef} className="will-change-transform inline-block">
+                and then
+              </div>
             </div>
 
-            <div className="relative inline-block">
-              <MaskedText
-                text={homeContent.headlineLine2}
-                splitBy="lines"
-                trigger="load"
-                delay={0.45}
-                duration={1.2}
-              />
+            <div className="relative inline-block overflow-hidden py-1">
+              <div ref={heroLine2Ref} className="will-change-transform inline-block">
+                {homeContent.headlineLine2}
+              </div>
             </div>
           </h1>
 
           {/* Overlapping Floating Sticker Group 2 (Bottom Overlap on NUMBERS) */}
-          <div className="absolute bottom-[20%] left-[8%] sm:left-[18%] lg:left-[24%] z-20 pointer-events-auto transform rotate-8 hover:scale-110 transition-transform">
+          <div className="hero-pop-sticker absolute bottom-[20%] left-[8%] sm:left-[18%] lg:left-[24%] z-20 pointer-events-auto transform rotate-8 hover:scale-110 transition-transform">
             <span className="px-4 py-1.5 bg-lime text-forest border-2 border-ink rounded-full shadow-brutal font-display text-base uppercase tracking-wider">
               6.4X ROAS
             </span>
           </div>
 
-          <div className="absolute bottom-[8%] right-[8%] sm:right-[16%] lg:right-[22%] z-20 pointer-events-auto transform -rotate-8 hover:scale-110 transition-transform">
+          <div className="hero-pop-sticker absolute bottom-[8%] right-[8%] sm:right-[16%] lg:right-[22%] z-20 pointer-events-auto transform -rotate-8 hover:scale-110 transition-transform">
             <span className="px-3.5 py-1.5 bg-tomato text-ink border-2 border-ink rounded-full shadow-brutal font-mono text-xs font-bold uppercase tracking-wider">
               -42% CPA
             </span>
           </div>
 
-          <div className="absolute bottom-[28%] right-[2%] sm:right-[8%] lg:right-[12%] z-20 pointer-events-auto transform rotate-12 hidden lg:block">
+          <div className="hero-pop-sticker absolute bottom-[28%] right-[2%] sm:right-[8%] lg:right-[12%] z-20 pointer-events-auto transform rotate-12 hidden lg:block">
             <BarcodeSticker code="DROP-08-LIVE" />
           </div>
 
           {/* Interactive Drag Hint with Handwritten Callout & Curved Arrow */}
-          <div className="absolute -bottom-4 left-4 sm:left-12 lg:left-24 z-20 hidden md:flex items-center gap-2 pointer-events-none select-none">
+          <div className="hero-pop-sticker absolute -bottom-4 left-4 sm:left-12 lg:left-24 z-20 hidden md:flex items-center gap-2 pointer-events-none select-none">
             <CurvedArrow direction="up-left" color="forest" />
             <span className="font-hand text-lg sm:text-xl text-forest font-bold rotate-[-6deg]">
               psst. these stick. go on, drag 'em!
@@ -184,7 +251,7 @@ export const HomePage: React.FC = () => {
                   left: `${st.initialX}%`,
                   top: `${st.initialY}%`,
                 }}
-                className="pointer-events-auto"
+                className="hero-pop-sticker pointer-events-auto"
               >
                 <StickerBadge
                   id={st.id}
@@ -200,7 +267,10 @@ export const HomePage: React.FC = () => {
         </div>
 
         {/* Hero Bottom Bar (Full-Bleed 3-Column Layout) */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-6 pt-6 border-t-2 border-ink/20 text-left relative z-20">
+        <div
+          ref={heroBottomRef}
+          className="w-full grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-6 pt-6 border-t-2 border-ink/20 text-left relative z-20"
+        >
           {/* Studio Hook Description */}
           <p className="font-sans text-sm sm:text-base text-ink/85 leading-relaxed max-w-lg">
             {homeContent.description}
@@ -236,22 +306,24 @@ export const HomePage: React.FC = () => {
       {/* =====================================================================
           DUAL ANGLED MARQUEE TAPES (Full-Bleed Edge-to-Edge)
           ===================================================================== */}
-      <div className="relative py-2 -my-2 overflow-hidden z-20 w-full">
-        <MarqueeTape
-          items={homeContent.tickerWords}
-          direction="left"
-          surface="ink"
-          speed={20}
-        />
-        <MarqueeTape
-          items={homeContent.brands}
-          direction="right"
-          surface="tomato"
-          speed={24}
-          separator="★"
-          className="-mt-1"
-        />
-      </div>
+      <ScrollReveal variant="fade-up" distance={25}>
+        <div className="relative py-2 -my-2 overflow-hidden z-20 w-full">
+          <MarqueeTape
+            items={homeContent.tickerWords}
+            direction="left"
+            surface="ink"
+            speed={20}
+          />
+          <MarqueeTape
+            items={homeContent.brands}
+            direction="right"
+            surface="tomato"
+            speed={24}
+            separator="★"
+            className="-mt-1"
+          />
+        </div>
+      </ScrollReveal>
 
       {/* =====================================================================
           02 MANIFESTO SECTION (Full-Bleed, Monumental Typography, Scroll Scrub)
@@ -275,19 +347,21 @@ export const HomePage: React.FC = () => {
         </div>
 
         <div ref={manifestoRef} className="w-full flex flex-col gap-10 relative z-20">
-          <div className="flex items-center justify-between border-b-2 border-forest/20 pb-4">
-            <SectionEyebrow label={homeContent.manifesto.eyebrow} color="forest" />
-            <div className="flex items-center gap-4">
-              <span className="font-mono text-xs uppercase tracking-widest font-bold opacity-75 hidden sm:inline">
-                STUDIO CORE MANIFESTO
-              </span>
-              <ScrollSpinStarSvg
-                size={84}
-                color="forest"
-                badgeText="WHY WE EXIST • 1.4 SECONDS • NOISE •"
-              />
+          <ScrollReveal variant="fade-up" distance={25}>
+            <div className="flex items-center justify-between border-b-2 border-forest/20 pb-4">
+              <SectionEyebrow label={homeContent.manifesto.eyebrow} color="forest" />
+              <div className="flex items-center gap-4">
+                <span className="font-mono text-xs uppercase tracking-widest font-bold opacity-75 hidden sm:inline">
+                  STUDIO CORE MANIFESTO
+                </span>
+                <ScrollSpinStarSvg
+                  size={84}
+                  color="forest"
+                  badgeText="WHY WE EXIST • 1.4 SECONDS • NOISE •"
+                />
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Dynamic Shapes Sliding in from Left and Right */}
           <div className="relative w-full flex flex-wrap items-center justify-between gap-4 pointer-events-none -my-2">
@@ -331,11 +405,14 @@ export const HomePage: React.FC = () => {
             <div className="hidden lg:flex lg:col-span-1 justify-center pt-2">
               <ScrollSnakeSvg color="forest" height={260} />
             </div>
-            <p className="lg:col-span-6 font-sans text-lg sm:text-2xl font-medium leading-relaxed opacity-90 border-l-4 border-forest pl-6 py-2">
-              {homeContent.manifesto.body}
-            </p>
 
-            <div className="lg:col-span-5 flex flex-col gap-4">
+            <ScrollReveal variant="fade-left" distance={35} className="lg:col-span-6">
+              <p className="font-sans text-lg sm:text-2xl font-medium leading-relaxed opacity-90 border-l-4 border-forest pl-6 py-2">
+                {homeContent.manifesto.body}
+              </p>
+            </ScrollReveal>
+
+            <ScrollReveal variant="fade-right" distance={35} delay={0.15} className="lg:col-span-5 flex flex-col gap-4">
               <ScrollInShape
                 direction="right"
                 distance={220}
@@ -368,7 +445,7 @@ export const HomePage: React.FC = () => {
                   </span>
                 ))}
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -396,24 +473,26 @@ export const HomePage: React.FC = () => {
         </div>
 
         <div className="w-full flex flex-col gap-14 relative z-20">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-2 border-paper/20 pb-8">
-            <div>
-              <SectionEyebrow index="04" label="Selected Work" color="paper" />
-              <h2 className="font-display text-5xl sm:text-7xl md:text-8xl uppercase tracking-tight leading-none text-paper mt-3">
-                <MaskedText text="WORK WE ARE LOUD ABOUT." splitBy="lines" trigger="scroll" />
-              </h2>
-            </div>
+          <ScrollReveal variant="fade-up" distance={35}>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-2 border-paper/20 pb-8">
+              <div>
+                <SectionEyebrow index="04" label="Selected Work" color="paper" />
+                <h2 className="font-display text-5xl sm:text-7xl md:text-8xl uppercase tracking-tight leading-none text-paper mt-3">
+                  <MaskedText text="WORK WE ARE LOUD ABOUT." splitBy="lines" trigger="scroll" />
+                </h2>
+              </div>
 
-            <div className="flex items-center gap-4">
-              <TransitionLink
-                to="/services"
-                transitionTitle="SERVICES & TOOLKIT"
-                className="px-6 py-3 bg-lime text-forest border-2 border-ink rounded-full font-mono text-xs font-bold uppercase tracking-wider hover:scale-105 transition-transform shadow-brutal-sm"
-              >
-                See All Capabilities →
-              </TransitionLink>
+              <div className="flex items-center gap-4">
+                <TransitionLink
+                  to="/services"
+                  transitionTitle="SERVICES & TOOLKIT"
+                  className="px-6 py-3 bg-lime text-forest border-2 border-ink rounded-full font-mono text-xs font-bold uppercase tracking-wider hover:scale-105 transition-transform shadow-brutal-sm"
+                >
+                  See All Capabilities →
+                </TransitionLink>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Dynamic Shapes Sliding in from Left and Right */}
           <div className="flex flex-wrap items-center justify-between gap-4 -mt-6 mb-2 pointer-events-none">
@@ -448,54 +527,10 @@ export const HomePage: React.FC = () => {
             </ScrollInShape>
           </div>
 
-          {/* 4 Multi-Project Showcase Grid (Expansive 2x2 Grid) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-            {workProjects.map((proj) => (
-              <div
-                key={proj.slug}
-                className="p-8 sm:p-10 bg-ink-2 border-2 border-paper/20 rounded-3xl flex flex-col justify-between gap-10 hover:border-lime transition-all duration-200 group shadow-brutal relative overflow-hidden"
-              >
-                <div>
-                  <div className="flex items-center justify-between pb-4 border-b border-paper/15">
-                    <span className="font-mono text-xs text-lime uppercase tracking-widest font-bold">
-                      ({proj.index}) {proj.category}
-                    </span>
-                    <span className="font-display text-4xl sm:text-5xl text-lime">
-                      {proj.headlineMetric}
-                    </span>
-                  </div>
-
-                  <h3 className="font-display text-4xl sm:text-5xl uppercase mt-4 group-hover:text-lime transition-colors">
-                    {proj.client}
-                  </h3>
-
-                  <p className="font-sans text-base text-paper/75 mt-4 leading-relaxed">
-                    {proj.summary}
-                  </p>
-
-                  <div className="flex flex-wrap items-center gap-2 mt-6">
-                    {proj.deliverables.map((d, i) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 font-mono text-[11px] uppercase font-bold bg-ink text-paper/85 border border-paper/25 rounded-full"
-                      >
-                        {d}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <TransitionLink
-                  to={`/work/${proj.slug}`}
-                  transitionTitle={`${proj.client.toUpperCase()} DOSSIER`}
-                  className="inline-flex items-center justify-between w-full pt-5 border-t border-paper/15 font-mono text-xs sm:text-sm text-lime font-bold uppercase group-hover:translate-x-1 transition-transform"
-                >
-                  <span>View Thermal Receipt Dossier</span>
-                  <ArrowUpRight className="w-5 h-5" />
-                </TransitionLink>
-              </div>
-            ))}
-          </div>
+          {/* Interactive Kinetic Campaign Showcase Console */}
+          <ScrollReveal variant="scale-up" distance={30} delay={0.1}>
+            <WorkShowcaseConsole />
+          </ScrollReveal>
         </div>
       </section>
 
@@ -554,7 +589,7 @@ export const HomePage: React.FC = () => {
         </div>
 
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-20">
-          <div>
+          <ScrollReveal variant="fade-right" distance={40}>
             <SectionEyebrow label={homeContent.receipts.eyebrow} color="ink" />
             <h2 className="font-display text-6xl sm:text-8xl uppercase tracking-tight leading-[0.88] mt-4 mb-6">
               <MaskedText text={homeContent.receipts.heading} splitBy="lines" trigger="scroll" />
@@ -575,10 +610,10 @@ export const HomePage: React.FC = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Full Thermal Receipt Presentation + Animated SVG Paper Icon */}
-          <div className="relative flex justify-center lg:justify-end">
+          <ScrollReveal variant="fade-left" distance={40} delay={0.2} className="relative flex justify-center lg:justify-end">
             <div className="absolute -top-6 -right-4 z-10 hidden sm:block">
               <ThermalReceiptSvg width={64} />
             </div>
@@ -615,11 +650,13 @@ export const HomePage: React.FC = () => {
                 </span>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
 
         {/* Dynamic Scroll-Traced Revenue Growth Chart */}
-        <ScrollGrowthChartSvg className="mt-14 relative z-20" />
+        <ScrollReveal variant="fade-up" distance={35} delay={0.15}>
+          <ScrollGrowthChartSvg className="mt-14 relative z-20" />
+        </ScrollReveal>
       </section>
 
       {/* =====================================================================
@@ -677,7 +714,7 @@ export const HomePage: React.FC = () => {
         </div>
 
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-start relative z-20">
-          <div className="lg:col-span-5 flex flex-col gap-6">
+          <ScrollReveal variant="fade-right" distance={40} className="lg:col-span-5 flex flex-col gap-6">
             <SectionEyebrow label={homeContent.contact.eyebrow} color="lime" />
             <h2 className="font-display text-6xl sm:text-8xl uppercase tracking-tight leading-[0.88] text-paper">
               <MaskedText text={homeContent.contact.heading} splitBy="lines" trigger="scroll" />
@@ -694,23 +731,49 @@ export const HomePage: React.FC = () => {
                 We review your current blended CAC, crawl your ad library, and send you a loom teardown within 24 hours. Zero sales decks.
               </p>
             </div>
-          </div>
+          </ScrollReveal>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              alert("Teardown request submitted! We will review your ad account within 24 hours.");
-            }}
-            className="lg:col-span-7 flex flex-col gap-6 p-8 sm:p-12 bg-ink-2 border-2 border-paper/20 rounded-3xl shadow-brutal-xl"
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <ScrollReveal variant="fade-left" distance={40} delay={0.15} className="lg:col-span-7">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                alert("Teardown request submitted! We will review your ad account within 24 hours.");
+              }}
+              className="flex flex-col gap-6 p-8 sm:p-12 bg-ink-2 border-2 border-paper/20 rounded-3xl shadow-brutal-xl"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ada Lovelace"
+                    required
+                    className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none font-sans"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
+                    Work Email
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="ada@brand.co"
+                    required
+                    className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none font-sans"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
-                  Your Name
+                  Brand Website or Instagram
                 </label>
                 <input
                   type="text"
-                  placeholder="Ada Lovelace"
+                  placeholder="yourbrand.com"
                   required
                   className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none font-sans"
                 />
@@ -718,64 +781,40 @@ export const HomePage: React.FC = () => {
 
               <div>
                 <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
-                  Work Email
+                  Monthly Ad Spend Budget
                 </label>
-                <input
-                  type="email"
-                  placeholder="ada@brand.co"
-                  required
-                  className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none font-sans"
+                <div className="flex flex-wrap gap-2.5">
+                  {homeContent.contact.budgetOptions.map((opt, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className="px-5 py-2.5 bg-ink border-2 border-paper/20 hover:border-lime text-xs font-mono font-bold rounded-full text-paper cursor-pointer active:scale-95 transition-transform"
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
+                  What are you selling?
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Brief summary of your product, margins, and target growth milestone..."
+                  className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none resize-none font-sans"
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
-                Brand Website or Instagram
-              </label>
-              <input
-                type="text"
-                placeholder="yourbrand.com"
-                required
-                className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none font-sans"
-              />
-            </div>
-
-            <div>
-              <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
-                Monthly Ad Spend Budget
-              </label>
-              <div className="flex flex-wrap gap-2.5">
-                {homeContent.contact.budgetOptions.map((opt, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className="px-5 py-2.5 bg-ink border-2 border-paper/20 hover:border-lime text-xs font-mono font-bold rounded-full text-paper cursor-pointer active:scale-95 transition-transform"
-                  >
-                    {opt}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
-                What are you selling?
-              </label>
-              <textarea
-                rows={3}
-                placeholder="Brief summary of your product, margins, and target growth milestone..."
-                className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none resize-none font-sans"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="px-10 py-4 bg-pink text-ink border-2 border-ink rounded-full font-sans text-base font-bold uppercase tracking-tight shadow-brutal hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all cursor-pointer self-start"
-            >
-              Send Teardown Request →
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="px-10 py-4 bg-pink text-ink border-2 border-ink rounded-full font-sans text-base font-bold uppercase tracking-tight shadow-brutal hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all cursor-pointer self-start"
+              >
+                Send Teardown Request →
+              </button>
+            </form>
+          </ScrollReveal>
         </div>
       </section>
 

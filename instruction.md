@@ -292,6 +292,23 @@ All core UI primitives MUST use strongly typed TypeScript props (union variants,
 - [x] **Removed All Text Slashes and Blinking Dots**:
   - Eliminated all occurrences of `//` and standalone text `/` across all headings, eyebrows, data files, footer, and navigation. Replaced with clean brutalist bullets `•`, em-dashes `—`, or words.
   - Removed all blinking dots (`animate-pulse`, `animate-ping`) from `FloatingNavbar` (`2 Q4 SPOTS`), `HomePage` eyebrow, `PullCurtainMenu`, and `ThermalShutterOverlay`.
+- [x] **Replaced Static Work Grid with Kinetic Campaign Showcase Console (`WorkShowcaseConsole.tsx`)**:
+  - Replaced the old 2x2 static card grid with an interactive, multi-dimensional campaign terminal.
+  - **Interactive Project Dial & Switcher**: Top pill tabs `[(01) Kilo Kicks 6.4x]`, `[(02) Brewkind Co. +280%]`, `[(03) Lumen Labs $4.8M]`, `[(04) FinNudge App -58%]` with directional `<Prev / Next>` arrows.
+  - **Split Interactive Cockpit**:
+    - Left Panel: Monumental client typography, strategic friction vs. execution breakdown, tactical deliverables pills, verified founder pull-quote card, and direct deep-link button (`/work/$slug`).
+    - Right Panel: Jagged-edge thermal campaign receipt with giant stamped metrics (`6.4x`, `+280%`, `$4.8M`, `-58%`), 4 verified KPI line items, barcode sticker, and draggable floating badges.
+    - Bottom Quick-Select Strip: 4 mini interactive project tiles for instant navigation.
+- [x] **Updated Studio Preloader to Deep Black with Horizontal Middle-Cut Split (`StudioPreloader.tsx`)**:
+  - Restyled preloader into locked **deep black surface** (`bg-ink` / `#121110`) with high-contrast paper white typography (`text-paper`), acid lime accent tags (`text-lime`), and subtle paper border framing (`border-paper/15`, `border-paper/30`).
+  - **Horizontal Middle-Cut & Vault Split Exit**:
+    - Built two distinct horizontal halves meeting along a dashed horizontal thermal tear seam at 50% screen height (`[ THERMAL TEAR SEAM ]`).
+    - Upper half holds brand header strip and monumental `Anton` percentage counter (`00%` $\rightarrow$ `100%`).
+    - Lower half holds brutalist lime progress bar, cycling system status message, and footer copyright strip.
+    - When counter hits 100%, the preloader cuts right across the middle:
+      - **Top Half** smoothly slides UP (`yPercent: -100`, `ease: "power4.inOut"`, 0.85s).
+      - **Bottom Half** smoothly slides DOWN (`yPercent: 100`, `ease: "power4.inOut"`, 0.85s).
+    - Opens like a cinematic vault door to reveal the website with buttery-smooth easing.
 - [x] **Configured Production `netlify.toml` File**:
   - Defined build command (`npm run build`), publish directory (`dist`), and Node runtime (`NODE_VERSION = "20"`).
   - Configured SPA 200 rewrite rule (`/* -> /index.html 200`) so TanStack Router client-side routes (`/services`, `/process`, `/work/:slug`) resolve properly without 404s on page reloads or deep links.
