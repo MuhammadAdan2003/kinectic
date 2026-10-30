@@ -1,0 +1,794 @@
+import React, { useRef } from "react";
+import { homeContent } from "@/data/homeContent";
+import { workProjects } from "@/data/workContent";
+import { StickerBadge } from "@/components/ui/StickerBadge";
+import { RotatingStamp } from "@/components/ui/RotatingStamp";
+import { MarqueeTape } from "@/components/ui/MarqueeTape";
+import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
+import { TransitionLink } from "@/components/ui/TransitionLink";
+import { MaskedText } from "@/components/ui/MaskedText";
+import { ThermalReceiptSvg } from "@/components/ui/svg/ThermalReceiptSvg";
+import { BrutalStar } from "@/components/ui/svg/BrutalStar";
+import { BarcodeSticker } from "@/components/ui/svg/BarcodeSticker";
+import { CursorPointer } from "@/components/ui/svg/CursorPointer";
+import { CurvedArrow } from "@/components/ui/svg/CurvedArrow";
+import { ScrollGrowthChartSvg } from "@/components/ui/svg/ScrollGrowthChartSvg";
+import { ScrollSnakeSvg } from "@/components/ui/svg/ScrollSnakeSvg";
+import { ScrollSpinStarSvg } from "@/components/ui/svg/ScrollSpinStarSvg";
+import { ScrollInShape } from "@/components/ui/ScrollInShape";
+import { BackgroundRoadLine } from "@/components/ui/svg/BackgroundRoadLine";
+import { useGSAP, gsap } from "@/lib/gsap";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
+
+export const HomePage: React.FC = () => {
+  const pageRef = useRef<HTMLDivElement>(null);
+  const manifestoRef = useRef<HTMLDivElement>(null);
+  const heroHeadingRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  // Scroll-scrubbed illumination animation for Manifesto text
+  useGSAP(
+    () => {
+      if (prefersReducedMotion || !manifestoRef.current) return;
+
+      const words = manifestoRef.current.querySelectorAll(".scrub-word");
+
+      gsap.fromTo(
+        words,
+        { opacity: 0.18, color: "var(--forest)" },
+        {
+          opacity: 1,
+          stagger: 0.08,
+          ease: "none",
+          scrollTrigger: {
+            trigger: manifestoRef.current,
+            start: "top 75%",
+            end: "center 50%",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+    },
+    { scope: manifestoRef, dependencies: [prefersReducedMotion] }
+  );
+
+  const manifestoHeadline = `${homeContent.manifesto.headline} ${homeContent.manifesto.highlightPhrase}`;
+  const manifestoWords = manifestoHeadline.split(" ");
+
+  return (
+    <div ref={pageRef} className="relative flex flex-col w-full overflow-x-clip">
+      {/* =====================================================================
+          01 HERO SECTION (Centered, Monumental, Full-Bleed Out-of-Container, Overlapping Icons)
+          ===================================================================== */}
+      <section id="hero" className="paper-tex relative min-h-[96vh] flex flex-col justify-between items-center text-center bg-paper text-ink px-[var(--gutter)] pt-28 pb-10 border-b-2 border-ink overflow-hidden">
+        {/* Top Eyebrow Header Strip */}
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 border-b-2 border-ink/20 pb-4 relative z-20">
+          <SectionEyebrow index="01" label={homeContent.eyebrow.replace(/^\(01\)\s*/, "")} />
+
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs uppercase tracking-wider font-semibold opacity-75">
+              {homeContent.subEyebrow}
+            </span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-1.5 font-mono text-[11px] text-ink/60 uppercase">
+            <span>[EST. 2024]</span>
+            <span>·</span>
+            <span>SCROLL TO EXPLORE ↓</span>
+          </div>
+        </div>
+
+        {/* Central Display Typography with Overlapping Badges & Graphic Icons */}
+        <div
+          ref={heroHeadingRef}
+          className="my-auto py-8 sm:py-12 w-full flex flex-col items-center justify-center relative select-none z-20"
+        >
+          {/* Overlapping Floating Sticker Group 1 (Top Left Overlap on MAKE) */}
+          <div className="absolute top-[8%] left-[10%] sm:left-[16%] lg:left-[22%] z-20 pointer-events-auto transform -rotate-6 hover:rotate-0 hover:scale-110 transition-transform">
+            <div className="flex flex-col items-center">
+              <span className="px-3.5 py-1.5 bg-sun text-ink border-2 border-ink rounded-full shadow-brutal font-mono text-xs font-bold uppercase tracking-wider">
+                40% OFF
+              </span>
+            </div>
+          </div>
+
+          <div className="absolute top-[18%] left-[2%] sm:left-[8%] lg:left-[14%] z-20 pointer-events-auto transform rotate-12 hover:rotate-0 hover:scale-110 transition-transform hidden sm:block">
+            <span className="px-3 py-1 bg-pink text-ink border-2 border-ink rounded-full shadow-brutal-sm font-mono text-xs font-bold uppercase">
+              +$48.2K TODAY
+            </span>
+          </div>
+
+          <div className="absolute top-[4%] right-[14%] sm:right-[20%] lg:right-[26%] z-20 pointer-events-auto transform rotate-6 hover:rotate-0 hover:scale-110 transition-transform">
+            <span className="px-3.5 py-1.5 bg-lime text-forest border-2 border-ink rounded-full shadow-brutal font-mono text-xs font-bold uppercase tracking-wider">
+              SOLD OUT
+            </span>
+          </div>
+
+          {/* Overlapping Brutalist SVG Geometric Star on NOISE */}
+          <div className="absolute top-[28%] right-[6%] sm:right-[12%] lg:right-[18%] z-20 pointer-events-none transform -rotate-12">
+            <BrutalStar size={38} color="lime" />
+          </div>
+
+          {/* Overlapping Cursor Pointer directly indicating headline */}
+          <div className="absolute top-[38%] left-[5%] sm:left-[12%] lg:left-[18%] z-20 pointer-events-none transform rotate-12 hidden md:block">
+            <CursorPointer color="pink" label="THUMBSTOPPED" />
+          </div>
+
+          {/* MAIN MONUMENTAL DISPLAY HEADLINE */}
+          <h1 className="font-display text-[clamp(60px,14.5vw,230px)] uppercase tracking-tight leading-[0.84] text-ink text-center max-w-none">
+            <div className="relative inline-block">
+              <MaskedText
+                text={homeContent.headlineLine1}
+                splitBy="lines"
+                trigger="load"
+                delay={0.15}
+                duration={1.2}
+              />
+            </div>
+
+            <div className="block text-forest font-serif italic lowercase font-normal text-[0.75em] sm:text-[0.82em] leading-none my-1 tracking-normal">
+              <MaskedText
+                text="and then"
+                splitBy="words"
+                trigger="load"
+                delay={0.3}
+                duration={1.1}
+              />
+            </div>
+
+            <div className="relative inline-block">
+              <MaskedText
+                text={homeContent.headlineLine2}
+                splitBy="lines"
+                trigger="load"
+                delay={0.45}
+                duration={1.2}
+              />
+            </div>
+          </h1>
+
+          {/* Overlapping Floating Sticker Group 2 (Bottom Overlap on NUMBERS) */}
+          <div className="absolute bottom-[20%] left-[8%] sm:left-[18%] lg:left-[24%] z-20 pointer-events-auto transform rotate-8 hover:scale-110 transition-transform">
+            <span className="px-4 py-1.5 bg-lime text-forest border-2 border-ink rounded-full shadow-brutal font-display text-base uppercase tracking-wider">
+              6.4X ROAS
+            </span>
+          </div>
+
+          <div className="absolute bottom-[8%] right-[8%] sm:right-[16%] lg:right-[22%] z-20 pointer-events-auto transform -rotate-8 hover:scale-110 transition-transform">
+            <span className="px-3.5 py-1.5 bg-tomato text-ink border-2 border-ink rounded-full shadow-brutal font-mono text-xs font-bold uppercase tracking-wider">
+              -42% CPA
+            </span>
+          </div>
+
+          <div className="absolute bottom-[28%] right-[2%] sm:right-[8%] lg:right-[12%] z-20 pointer-events-auto transform rotate-12 hidden lg:block">
+            <BarcodeSticker code="DROP-08-LIVE" />
+          </div>
+
+          {/* Interactive Drag Hint with Handwritten Callout & Curved Arrow */}
+          <div className="absolute -bottom-4 left-4 sm:left-12 lg:left-24 z-20 hidden md:flex items-center gap-2 pointer-events-none select-none">
+            <CurvedArrow direction="up-left" color="forest" />
+            <span className="font-hand text-lg sm:text-xl text-forest font-bold rotate-[-6deg]">
+              psst. these stick. go on, drag 'em!
+            </span>
+          </div>
+
+          {/* Interactive Draggable Hero Stickers (Free-floating background layer) */}
+          <div className="hidden xl:block absolute inset-0 pointer-events-none">
+            {homeContent.stickers.map((st) => (
+              <div
+                key={st.id}
+                style={{
+                  position: "absolute",
+                  left: `${st.initialX}%`,
+                  top: `${st.initialY}%`,
+                }}
+                className="pointer-events-auto"
+              >
+                <StickerBadge
+                  id={st.id}
+                  text={st.text}
+                  subtext={st.subtext}
+                  color={st.bgColor}
+                  rotation={st.rotation}
+                  isDraggable={true}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Hero Bottom Bar (Full-Bleed 3-Column Layout) */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-6 pt-6 border-t-2 border-ink/20 text-left relative z-20">
+          {/* Studio Hook Description */}
+          <p className="font-sans text-sm sm:text-base text-ink/85 leading-relaxed max-w-lg">
+            {homeContent.description}
+          </p>
+
+          {/* Center Call-to-Action Cluster */}
+          <div className="flex flex-wrap items-center justify-start md:justify-center gap-3">
+            <TransitionLink
+              to="/#contact"
+              transitionTitle="START A PROJECT"
+              className="px-7 py-3.5 bg-pink text-ink border-2 border-ink rounded-full font-sans text-sm font-bold uppercase tracking-tight shadow-brutal hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all inline-flex items-center gap-2"
+            >
+              <span>{homeContent.ctaPrimary.label}</span>
+              <ArrowRight className="w-4 h-4" />
+            </TransitionLink>
+
+            <TransitionLink
+              to="/services"
+              transitionTitle="SERVICES & TOOLKIT"
+              className="px-6 py-3.5 bg-paper text-ink border-2 border-ink rounded-full font-sans text-sm font-bold uppercase tracking-tight hover:bg-lime hover:text-forest transition-colors shadow-brutal-sm"
+            >
+              Explore Services
+            </TransitionLink>
+          </div>
+
+          {/* Right: Spinning Audio / Receipt Stamp */}
+          <div className="flex justify-start md:justify-end">
+            <RotatingStamp text={homeContent.stampText} size={120} />
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          DUAL ANGLED MARQUEE TAPES (Full-Bleed Edge-to-Edge)
+          ===================================================================== */}
+      <div className="relative py-2 -my-2 overflow-hidden z-20 w-full">
+        <MarqueeTape
+          items={homeContent.tickerWords}
+          direction="left"
+          surface="ink"
+          speed={20}
+        />
+        <MarqueeTape
+          items={homeContent.brands}
+          direction="right"
+          surface="tomato"
+          speed={24}
+          separator="★"
+          className="-mt-1"
+        />
+      </div>
+
+      {/* =====================================================================
+          02 MANIFESTO SECTION (Full-Bleed, Monumental Typography, Scroll Scrub)
+          ===================================================================== */}
+      <section id="manifesto" className="paper-tex relative bg-lime text-forest px-[var(--gutter)] py-24 md:py-36 border-b-2 border-ink overflow-hidden w-full">
+        {/* Floating Scroll-In Shape from TOP */}
+        <div className="flex justify-center -mt-8 mb-6 relative z-20">
+          <ScrollInShape
+            direction="top"
+            distance={130}
+            initialRotate={-6}
+            restingRotate={-1.5}
+            start="top 90%"
+            end="center 52%"
+          >
+            <div className="px-5 py-2 bg-forest text-lime border-2 border-ink shadow-brutal font-mono text-xs font-bold uppercase tracking-wider rounded-full inline-flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-lime animate-ping" />
+              <span>ATTENTION CAPTURE PROTOCOL // 1.4s HOOK</span>
+            </div>
+          </ScrollInShape>
+        </div>
+
+        <div ref={manifestoRef} className="w-full flex flex-col gap-10 relative z-20">
+          <div className="flex items-center justify-between border-b-2 border-forest/20 pb-4">
+            <SectionEyebrow label={homeContent.manifesto.eyebrow} color="forest" />
+            <div className="flex items-center gap-4">
+              <span className="font-mono text-xs uppercase tracking-widest font-bold opacity-75 hidden sm:inline">
+                STUDIO CORE MANIFESTO
+              </span>
+              <ScrollSpinStarSvg
+                size={84}
+                color="forest"
+                badgeText="WHY WE EXIST • 1.4 SECONDS • NOISE •"
+              />
+            </div>
+          </div>
+
+          {/* Dynamic Shapes Sliding in from Left and Right */}
+          <div className="relative w-full flex flex-wrap items-center justify-between gap-4 pointer-events-none -my-2">
+            <ScrollInShape
+              direction="left"
+              distance={240}
+              initialRotate={-18}
+              restingRotate={-4}
+              start="top 85%"
+              end="center 50%"
+              className="pointer-events-auto"
+            >
+              <div className="px-5 py-2.5 bg-paper text-ink border-2 border-ink shadow-brutal font-display text-sm sm:text-base uppercase tracking-tight rounded-xl flex items-center gap-2.5">
+                <span className="text-lg">⚡</span>
+                <span>NO 40-SLIDE DECKS</span>
+              </div>
+            </ScrollInShape>
+
+            <ScrollInShape
+              direction="right"
+              distance={260}
+              initialRotate={20}
+              restingRotate={6}
+              start="top 85%"
+              end="center 50%"
+              className="pointer-events-auto"
+            >
+              <div className="px-5 py-2.5 bg-tomato text-ink border-2 border-ink shadow-brutal font-mono text-xs font-bold uppercase tracking-wider rounded-xl flex items-center gap-2">
+                <span className="font-display text-lg">★</span>
+                <span>100% RETENTION AUDIT</span>
+              </div>
+            </ScrollInShape>
+          </div>
+
+          {/* Words illuminate as you scroll down */}
+          <p className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase tracking-tight leading-[0.92] flex flex-wrap gap-x-4 gap-y-2 max-w-6xl">
+            {manifestWords(manifestoWords)}
+          </p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-6 border-t-2 border-forest/20">
+            <div className="hidden lg:flex lg:col-span-1 justify-center pt-2">
+              <ScrollSnakeSvg color="forest" height={260} />
+            </div>
+            <p className="lg:col-span-6 font-sans text-lg sm:text-2xl font-medium leading-relaxed opacity-90 border-l-4 border-forest pl-6 py-2">
+              {homeContent.manifesto.body}
+            </p>
+
+            <div className="lg:col-span-5 flex flex-col gap-4">
+              <ScrollInShape
+                direction="right"
+                distance={220}
+                initialRotate={12}
+                restingRotate={2}
+                start="top 80%"
+                end="center 50%"
+              >
+                <div className="p-4 bg-paper text-ink border-2 border-ink rounded-2xl shadow-brutal flex flex-col gap-1">
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-forest font-bold">
+                    DOPAMINE INTERRUPT RATE
+                  </span>
+                  <div className="flex items-baseline justify-between">
+                    <span className="font-display text-3xl text-forest">84.2%</span>
+                    <span className="font-mono text-xs font-bold text-tomato">[+31% VS BENCHMARK]</span>
+                  </div>
+                </div>
+              </ScrollInShape>
+
+              <span className="font-mono text-xs uppercase tracking-widest font-bold text-forest/70">
+                Current Direct-Response Sprint Themes:
+              </span>
+              <div className="flex flex-wrap items-center gap-3">
+                {homeContent.manifesto.hookCycles.map((hook, i) => (
+                  <span
+                    key={i}
+                    className="px-4 py-2 font-mono text-xs font-bold uppercase bg-paper text-ink border-2 border-ink rounded-full shadow-brutal-sm hover:scale-105 transition-transform"
+                  >
+                    {hook}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          03 SELECTED WORK SHOWCASE (Expansive Full-Bleed Grid)
+          ===================================================================== */}
+      <section id="work" className="relative bg-ink text-paper px-[var(--gutter)] py-28 border-b-2 border-ink w-full">
+        {/* Floating Scroll-In Shape from TOP */}
+        <div className="flex justify-center -mt-10 mb-8 relative z-20">
+          <ScrollInShape
+            direction="top"
+            distance={130}
+            initialRotate={4}
+            restingRotate={0}
+            start="top 90%"
+            end="center 55%"
+          >
+            <div className="px-6 py-2.5 bg-lime text-forest border-2 border-ink shadow-brutal-lg font-mono text-xs sm:text-sm font-bold uppercase tracking-wider rounded-full flex items-center gap-2">
+              <span>✦</span>
+              <span>8-FIGURE DIRECT-RESPONSE SCALING INFRASTRUCTURE</span>
+              <span>✦</span>
+            </div>
+          </ScrollInShape>
+        </div>
+
+        <div className="w-full flex flex-col gap-14 relative z-20">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-2 border-paper/20 pb-8">
+            <div>
+              <SectionEyebrow index="04" label="Selected Work" color="paper" />
+              <h2 className="font-display text-5xl sm:text-7xl md:text-8xl uppercase tracking-tight leading-none text-paper mt-3">
+                <MaskedText text="WORK WE ARE LOUD ABOUT." splitBy="lines" trigger="scroll" />
+              </h2>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <TransitionLink
+                to="/services"
+                transitionTitle="SERVICES & TOOLKIT"
+                className="px-6 py-3 bg-lime text-forest border-2 border-ink rounded-full font-mono text-xs font-bold uppercase tracking-wider hover:scale-105 transition-transform shadow-brutal-sm"
+              >
+                See All Capabilities →
+              </TransitionLink>
+            </div>
+          </div>
+
+          {/* Dynamic Shapes Sliding in from Left and Right */}
+          <div className="flex flex-wrap items-center justify-between gap-4 -mt-6 mb-2 pointer-events-none">
+            <ScrollInShape
+              direction="left"
+              distance={240}
+              initialRotate={-14}
+              restingRotate={-3}
+              start="top 85%"
+              end="center 50%"
+              className="pointer-events-auto"
+            >
+              <div className="px-4 py-2 bg-pink text-ink border-2 border-paper rounded-xl shadow-brutal font-mono text-xs font-bold uppercase flex items-center gap-2">
+                <span>★</span>
+                <span>+$24.8M NET ATTRIBUTED</span>
+              </div>
+            </ScrollInShape>
+
+            <ScrollInShape
+              direction="right"
+              distance={240}
+              initialRotate={16}
+              restingRotate={4}
+              start="top 85%"
+              end="center 50%"
+              className="pointer-events-auto"
+            >
+              <div className="px-4 py-2 bg-sun text-ink border-2 border-paper rounded-xl shadow-brutal font-mono text-xs font-bold uppercase flex items-center gap-2">
+                <span>⚡</span>
+                <span>PROVEN ACQUISITION ASSETS</span>
+              </div>
+            </ScrollInShape>
+          </div>
+
+          {/* 4 Multi-Project Showcase Grid (Expansive 2x2 Grid) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+            {workProjects.map((proj) => (
+              <div
+                key={proj.slug}
+                className="p-8 sm:p-10 bg-ink-2 border-2 border-paper/20 rounded-3xl flex flex-col justify-between gap-10 hover:border-lime transition-all duration-200 group shadow-brutal relative overflow-hidden"
+              >
+                <div>
+                  <div className="flex items-center justify-between pb-4 border-b border-paper/15">
+                    <span className="font-mono text-xs text-lime uppercase tracking-widest font-bold">
+                      ({proj.index}) {proj.category}
+                    </span>
+                    <span className="font-display text-4xl sm:text-5xl text-lime">
+                      {proj.headlineMetric}
+                    </span>
+                  </div>
+
+                  <h3 className="font-display text-4xl sm:text-5xl uppercase mt-4 group-hover:text-lime transition-colors">
+                    {proj.client}
+                  </h3>
+
+                  <p className="font-sans text-base text-paper/75 mt-4 leading-relaxed">
+                    {proj.summary}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-2 mt-6">
+                    {proj.deliverables.map((d, i) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1 font-mono text-[11px] uppercase font-bold bg-ink text-paper/85 border border-paper/25 rounded-full"
+                      >
+                        {d}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <TransitionLink
+                  to={`/work/${proj.slug}`}
+                  transitionTitle={`${proj.client.toUpperCase()} DOSSIER`}
+                  className="inline-flex items-center justify-between w-full pt-5 border-t border-paper/15 font-mono text-xs sm:text-sm text-lime font-bold uppercase group-hover:translate-x-1 transition-transform"
+                >
+                  <span>View Thermal Receipt Dossier</span>
+                  <ArrowUpRight className="w-5 h-5" />
+                </TransitionLink>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          04 THE RECEIPTS (Full-Bleed Tomato KPI Showcase)
+          ===================================================================== */}
+      <section id="receipts" className="paper-tex relative bg-tomato text-ink px-[var(--gutter)] py-28 border-b-2 border-ink overflow-hidden w-full">
+        {/* Floating Scroll-In Shape from TOP */}
+        <div className="flex justify-center -mt-10 mb-8 relative z-20">
+          <ScrollInShape
+            direction="top"
+            distance={120}
+            initialRotate={-5}
+            restingRotate={-1.5}
+            start="top 90%"
+            end="center 55%"
+          >
+            <div className="px-6 py-2.5 bg-paper text-ink border-2 border-ink shadow-brutal font-mono text-xs font-bold uppercase tracking-wider rounded-full inline-flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-forest" />
+              <span>AUDITED SERVER-SIDE CAPI // ZERO ESTIMATION</span>
+            </div>
+          </ScrollInShape>
+        </div>
+
+        {/* Dynamic Shapes Sliding in from Left and Right */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pointer-events-none relative z-20">
+          <ScrollInShape
+            direction="left"
+            distance={220}
+            initialRotate={-16}
+            restingRotate={-4}
+            start="top 85%"
+            end="center 50%"
+            className="pointer-events-auto"
+          >
+            <div className="px-5 py-2.5 bg-lime text-forest border-2 border-ink shadow-brutal font-display text-base uppercase rounded-xl flex items-center gap-2">
+              <span className="text-xl">✓</span>
+              <span>6.4X PEAK BLENDED ROAS</span>
+            </div>
+          </ScrollInShape>
+
+          <ScrollInShape
+            direction="right"
+            distance={240}
+            initialRotate={18}
+            restingRotate={5}
+            start="top 85%"
+            end="center 50%"
+            className="pointer-events-auto"
+          >
+            <div className="px-5 py-2.5 bg-paper text-ink border-2 border-ink shadow-brutal font-mono text-xs font-bold uppercase rounded-xl flex items-center gap-2">
+              <span className="font-display text-lg text-forest">+$</span>
+              <span>$48,290,000 ATTRIBUTED</span>
+            </div>
+          </ScrollInShape>
+        </div>
+
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-20">
+          <div>
+            <SectionEyebrow label={homeContent.receipts.eyebrow} color="ink" />
+            <h2 className="font-display text-6xl sm:text-8xl uppercase tracking-tight leading-[0.88] mt-4 mb-6">
+              <MaskedText text={homeContent.receipts.heading} splitBy="lines" trigger="scroll" />
+            </h2>
+            <p className="font-sans text-lg sm:text-xl text-ink/90 leading-relaxed mb-10 max-w-xl">
+              {homeContent.receipts.subheading}
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 font-mono border-t-2 border-ink pt-8">
+              {homeContent.receipts.kpis.map((kpi, idx) => (
+                <div key={idx}>
+                  <span className="text-xs uppercase tracking-wider opacity-75 block mb-1">
+                    {kpi.term}
+                  </span>
+                  <span className="font-display text-4xl sm:text-5xl uppercase tracking-tight">
+                    {kpi.definition}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Full Thermal Receipt Presentation + Animated SVG Paper Icon */}
+          <div className="relative flex justify-center lg:justify-end">
+            <div className="absolute -top-6 -right-4 z-10 hidden sm:block">
+              <ThermalReceiptSvg width={64} />
+            </div>
+
+            <div className="bg-paper text-ink p-8 sm:p-10 border-2 border-ink shadow-brutal-xl font-mono text-xs flex flex-col justify-between max-w-md w-full">
+              <div className="text-center border-b-2 border-dashed border-ink pb-5">
+                <span className="font-display text-3xl uppercase tracking-wider block">
+                  KINETIC®
+                </span>
+                <span className="text-xs opacity-75">
+                  PERFORMANCE GROWTH STUDIO
+                </span>
+                <div className="flex justify-between text-[11px] mt-3 opacity-60">
+                  <span>ORDER {homeContent.receipts.orderNo}</span>
+                  <span>TABLE: FOUNDERS</span>
+                </div>
+              </div>
+
+              <div className="py-6 flex flex-col gap-2.5">
+                {homeContent.receipts.lineItems.map((item, i) => (
+                  <div key={i} className="flex justify-between items-center text-xs">
+                    <span className="truncate pr-2">{item.label}</span>
+                    <span className="font-bold">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t-2 border-dashed border-ink pt-5 text-center">
+                <span className="text-xs font-bold block">
+                  TOTAL: {homeContent.receipts.total}
+                </span>
+                <span className="text-[10px] opacity-60 mt-1 block">
+                  {homeContent.receipts.footerNote}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Dynamic Scroll-Traced Revenue Growth Chart */}
+        <ScrollGrowthChartSvg className="mt-14 relative z-20" />
+      </section>
+
+      {/* =====================================================================
+          05 CONTACT BRIEF SECTION (Expansive Out-of-Container Form)
+          ===================================================================== */}
+      <section id="contact" className="relative bg-ink text-paper px-[var(--gutter)] py-28 overflow-hidden w-full">
+        {/* Floating Scroll-In Shape from TOP */}
+        <div className="flex justify-center -mt-10 mb-8 relative z-20">
+          <ScrollInShape
+            direction="top"
+            distance={110}
+            initialRotate={-3}
+            restingRotate={0}
+            start="top 90%"
+            end="center 55%"
+          >
+            <div className="px-6 py-2.5 bg-lime text-forest border-2 border-ink shadow-brutal font-mono text-xs font-bold uppercase tracking-wider rounded-full inline-flex items-center gap-2">
+              <span>⚡</span>
+              <span>DIRECT FOUNDER ACCESS • NO JUNIOR ACCOUNT MANAGERS</span>
+            </div>
+          </ScrollInShape>
+        </div>
+
+        {/* Dynamic Shapes Sliding in from Left and Right */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pointer-events-none relative z-20">
+          <ScrollInShape
+            direction="left"
+            distance={200}
+            initialRotate={-12}
+            restingRotate={-3}
+            start="top 85%"
+            end="center 50%"
+            className="pointer-events-auto"
+          >
+            <div className="px-4 py-2 bg-pink text-ink border-2 border-paper rounded-xl shadow-brutal font-mono text-xs font-bold uppercase flex items-center gap-2">
+              <span className="font-bold">24H</span>
+              <span>VIDEO LOOM TEARDOWN</span>
+            </div>
+          </ScrollInShape>
+
+          <ScrollInShape
+            direction="right"
+            distance={200}
+            initialRotate={14}
+            restingRotate={4}
+            start="top 85%"
+            end="center 50%"
+            className="pointer-events-auto"
+          >
+            <div className="px-4 py-2 bg-sun text-ink border-2 border-paper rounded-xl shadow-brutal font-mono text-xs font-bold uppercase flex items-center gap-2">
+              <span>★</span>
+              <span>LIMITED TO 3 BRANDS / MO</span>
+            </div>
+          </ScrollInShape>
+        </div>
+
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-start relative z-20">
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            <SectionEyebrow label={homeContent.contact.eyebrow} color="lime" />
+            <h2 className="font-display text-6xl sm:text-8xl uppercase tracking-tight leading-[0.88] text-paper">
+              <MaskedText text={homeContent.contact.heading} splitBy="lines" trigger="scroll" />
+            </h2>
+            <p className="font-sans text-base sm:text-xl text-paper/75 leading-relaxed">
+              {homeContent.contact.subheading}
+            </p>
+
+            <div className="p-6 bg-ink-2 border-2 border-paper/20 rounded-2xl flex flex-col gap-2 mt-4">
+              <span className="font-mono text-xs uppercase tracking-widest text-lime font-bold">
+                WHAT HAPPENS NEXT
+              </span>
+              <p className="font-sans text-sm text-paper/80 leading-relaxed">
+                We review your current blended CAC, crawl your ad library, and send you a loom teardown within 24 hours. Zero sales decks.
+              </p>
+            </div>
+          </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              alert("Teardown request submitted! We will review your ad account within 24 hours.");
+            }}
+            className="lg:col-span-7 flex flex-col gap-6 p-8 sm:p-12 bg-ink-2 border-2 border-paper/20 rounded-3xl shadow-brutal-xl"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ada Lovelace"
+                  required
+                  className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none font-sans"
+                />
+              </div>
+
+              <div>
+                <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
+                  Work Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="ada@brand.co"
+                  required
+                  className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none font-sans"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
+                Brand Website or Instagram
+              </label>
+              <input
+                type="text"
+                placeholder="yourbrand.com"
+                required
+                className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none font-sans"
+              />
+            </div>
+
+            <div>
+              <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
+                Monthly Ad Spend Budget
+              </label>
+              <div className="flex flex-wrap gap-2.5">
+                {homeContent.contact.budgetOptions.map((opt, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className="px-5 py-2.5 bg-ink border-2 border-paper/20 hover:border-lime text-xs font-mono font-bold rounded-full text-paper cursor-pointer active:scale-95 transition-transform"
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="font-mono text-xs uppercase text-paper/80 block mb-2 font-semibold">
+                What are you selling?
+              </label>
+              <textarea
+                rows={3}
+                placeholder="Brief summary of your product, margins, and target growth milestone..."
+                className="w-full px-4 py-3.5 bg-ink text-paper border-2 border-paper/20 rounded-xl text-sm focus:border-lime outline-none resize-none font-sans"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="px-10 py-4 bg-pink text-ink border-2 border-ink rounded-full font-sans text-base font-bold uppercase tracking-tight shadow-brutal hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all cursor-pointer self-start"
+            >
+              Send Teardown Request →
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* 60 to 80px Thick Highway Road Line Winding Through the Background */}
+      <BackgroundRoadLine containerRef={pageRef} roadWidth={74} className="z-[10]" />
+    </div>
+  );
+};
+
+function manifestWords(words: string[]) {
+  return words.map((w, idx) => (
+    <span key={idx} className="scrub-word inline-block opacity-20 transition-opacity">
+      {w}
+    </span>
+  ));
+}

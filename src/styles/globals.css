@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-lime: var(--lime);
+  --color-forest: var(--forest);
+  --color-blue: var(--blue);
+  --color-tomato: var(--tomato);
+  --color-pink: var(--pink);
+  --color-sun: var(--sun);
+
+  --font-display: "Anton", Impact, "Arial Narrow", sans-serif;
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", "Comic Sans MS", cursive;
+}
+
+/* ==========================================================================
+   TACTILE PAPER TEXTURE OVERLAY (.paper-tex)
+   Uses an inline SVG fractal noise data URI with adjustable --tex-opacity
+   ========================================================================== */
+.paper-tex {
+  position: relative;
+}
+
+.paper-tex::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--tex-opacity, 0.4);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: multiply;
+}
+
+/* ==========================================================================
+   NEO-BRUTALIST OFFSET SHADOWS (Locked to var(--ink))
+   ========================================================================== */
+.shadow-brutal-sm {
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.shadow-brutal {
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.shadow-brutal-lg {
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.shadow-brutal-xl {
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.shadow-brutal-paper {
+  box-shadow: 4px 4px 0 var(--paper);
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper-2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink);
+  border: 1px solid var(--paper-2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--forest);
+}
+
+/* ==========================================================================
+   BUTTERY SMOOTH ACCORDION EASING
+   Uses grid-template-rows 0fr -> 1fr with --ease-out exponential curve
+   ========================================================================== */
+.smooth-accordion-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 500ms var(--ease-out), opacity 420ms var(--ease-out);
+  will-change: grid-template-rows, opacity;
+}
+
+.smooth-accordion-grid[data-state="open"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.smooth-accordion-grid[data-state="closed"] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.smooth-accordion-inner {
+  overflow: hidden;
+  min-height: 0;
+  transition: transform 500ms var(--ease-out), opacity 400ms var(--ease-out);
+}
+
+.smooth-accordion-grid[data-state="closed"] .smooth-accordion-inner {
+  transform: translateY(-8px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.smooth-accordion-grid[data-state="open"] .smooth-accordion-inner {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.smooth-accordion-icon {
+  transition: transform 500ms var(--ease-out);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smooth-accordion-grid,
+  .smooth-accordion-inner,
+  .smooth-accordion-icon {
+    transition-duration: 0.01ms !important;
+  }
+}
+
