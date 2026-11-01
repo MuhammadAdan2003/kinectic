@@ -378,6 +378,20 @@ All core UI primitives MUST use strongly typed TypeScript props (union variants,
     - **Selected Work**: Work showcase console scales and glides up with brutalist presence.
     - **The Receipts**: Eyebrow, headline, 3-column KPI metrics, and thermal receipt reveal with staggered motion.
     - **Contact Brief**: Split-column entrance with left info sliding in from left and the contact form sliding in from right.
+- [x] **Cinematic Pacing & Reading Hold for Thermal Shutter Page Transitions (`ThermalShutterOverlay.tsx`)**:
+  - **Pacing & Readability**: Addressed user feedback ("make a page transition slow i cannot even read while switching the page") by introducing an intentional, generous reading hold (`0.95s`) while the screen is covered by the thermal shutter.
+  - **Majestic Column Motion**: Columns glide down (`0.70s`, `power3.inOut`, `stagger: 0.05s`) and exit smoothly (`0.75s`, `power3.inOut`), replacing the previous abrupt 0.4s flash.
+  - **Elevated Legibility**: Upgraded the central route stamp pill to a bold brutalist badge card with high-contrast text (`[NAVIGATING]`, giant Anton route title, and pulsing `PREPARING CANVAS` indicator), giving visitors ample time to comfortably read the destination title during navigation.
+- [x] **Elastic Black Rubber Cord & Anti-Stuck Guaranteed Recoil System (`MobilePullDownTab.tsx`)**:
+  - **Fixed "Menu Stuck" Bug**: Removed element-level capture vulnerability by implementing global window-level pointer event listeners (`pointermove`, `pointerup`, `pointercancel`). Whether dragging across the screen, outside the window, or flicking rapidly, the tab is 100% guaranteed to catch release events and smoothly recoil back to the top starting position (`y = 0`).
+  - **SVG Dynamic Black Elastic Cord**:
+    - Created an SVG elastic rubber string anchored to a dark brutalist ceiling bracket at `y = 0` connecting straight into the notepad eyelet ring with zero gap.
+    - Features tension thinning physics: as the user pulls down, the black cord dynamically thins from `3.2px` down to `1.8px`.
+    - Features elastic lateral bowing: dragging slightly sideways curves the black cord elastically via a dynamic quadratic bezier curve (`M 16 0 Q ... 16 safeY`).
+  - **Buttery Elastic Recoil & Guaranteed Docking**:
+    - Releasing before the threshold smoothly recoils both the black cord and the page card back to `top: 0` using GSAP spring physics (`ease: "elastic.out(1.2, 0.38)"`, 0.7s).
+    - Releasing past the threshold (or fast flick) smoothly snaps the tab back to `y = 0` before triggering the curtain menu (`onOpen()`), ensuring the tab is NEVER left hanging down mid-screen and is always waiting in its starting position when the curtain closes.
+    - Quick tap plays a micro-spring pull-down bounce (22px) and triggers the menu.
 - [x] **Mobile Elastic "PULL ME DOWN" Small Page Pull Tab (`MobilePullDownTab.tsx`)**:
   - Replaced the conventional mobile hamburger with a tactile neo-brutalist small notepad page tag hanging down from the top ceiling (`fixed top-0 left-1/2 -translate-x-1/2 z-[110] md:hidden`).
   - **Tactile Paper Aesthetics**: Warm editorial paper background (`bg-paper`), crisp brutalist border (`2px solid var(--ink)`), tomato red tape strip connecting to ceiling, dashed notebook ruled line, bottom dog-ear corner fold, and 3-dot gripper handle.
