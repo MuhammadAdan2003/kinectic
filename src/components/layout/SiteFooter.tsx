@@ -38,11 +38,17 @@ export const SiteFooter: React.FC = () => {
               <TransitionLink to="/process" transitionTitle="PROCESS" className="hover:text-lime transition-colors">
                 (03) Process & Ethos
               </TransitionLink>
+              <TransitionLink to="/manifesto" transitionTitle="MANIFESTO" className="hover:text-lime transition-colors">
+                (04) Studio Manifesto
+              </TransitionLink>
+              <TransitionLink to="/growth-lab" transitionTitle="GROWTH LAB" className="hover:text-lime transition-colors">
+                (05) Growth Lab Simulator
+              </TransitionLink>
               <TransitionLink to="/#work" transitionTitle="WORK" className="hover:text-lime transition-colors">
-                (04) Selected Work
+                (06) Selected Work
               </TransitionLink>
               <TransitionLink to="/#contact" transitionTitle="CONTACT" className="hover:text-lime transition-colors">
-                (05) Contact Brief
+                (07) Contact Brief
               </TransitionLink>
             </div>
           </div>

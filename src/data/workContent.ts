@@ -27,7 +27,7 @@ export const workProjects: WorkProject[] = [
     headlineMetric: "6.4x",
     metricLabel: "BLENDED ROAS",
     accentColor: "lime",
-    summary: "Scaled a carbon-cushioned runner brand from $80k/month to $640k/month in 6 months using high-velocity TikTok UGC and aggressive Google Shopping feed optimization.",
+    summary: "Scaled a carbon-cushioned runner brand from $80k monthly to $640k monthly in 6 months using high-velocity TikTok UGC and aggressive Google Shopping feed optimization.",
     challenge: "High customer acquisition costs on Meta and stagnant revenue caused by creative fatigue and unsegmented shopping feeds.",
     strategy: "Introduced 35+ creator hooks focusing on joint pain relief, restructured Google PMax campaigns with negative keyword exclusions, and deployed a sub-second advertorial checkout.",
     results: [

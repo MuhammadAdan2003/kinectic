@@ -7,7 +7,7 @@ export interface StickerBadgeProps {
   id?: string;
   text: string;
   subtext?: string;
-  color?: "lime" | "tomato" | "pink" | "sun" | "paper" | "ink";
+  color?: "lime" | "tomato" | "pink" | "sun" | "paper" | "ink" | "blue";
   rotation?: number;
   isDraggable?: boolean;
   className?: string;
@@ -58,6 +58,7 @@ export const StickerBadge: React.FC<StickerBadgeProps> = ({
     sun: "bg-sun text-ink",
     paper: "bg-paper text-ink",
     ink: "bg-ink text-paper",
+    blue: "bg-blue text-paper",
   };
 
   return (

@@ -3,9 +3,8 @@ import { useRouterState } from "@tanstack/react-router";
 import { siteConfig } from "@/data/siteConfig";
 import { TransitionLink } from "@/components/ui/TransitionLink";
 import { EqualizerWave } from "@/components/ui/svg/EqualizerWave";
-import { MobilePullDownTab } from "@/components/layout/MobilePullDownTab";
+import { ElasticPullTab } from "@/components/layout/ElasticPullTab";
 import { useTransition } from "@/context/TransitionContext";
-import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const FloatingNavbar: React.FC = () => {
@@ -15,11 +14,11 @@ export const FloatingNavbar: React.FC = () => {
 
   return (
     <>
-      {/* Mobile-Only Elastic Small Page "PULL ME DOWN" Hanging Tab */}
-      <MobilePullDownTab
+      {/* Elastic PULL ME Hanging Tab for Both Mobile and Desktop */}
+      <ElasticPullTab
         isOpen={isMenuOpen}
         onOpen={() => setIsMenuOpen(true)}
-        className="md:hidden"
+        className="right-4 sm:right-6 lg:right-8"
       />
 
       <header className="pointer-events-none fixed inset-x-0 top-0 z-[100] flex items-center justify-between gap-2 px-[var(--gutter)] pt-2.5 sm:pt-4">
@@ -88,43 +87,8 @@ export const FloatingNavbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Studio Directory Toggle & CTA */}
-        <div className="pointer-events-auto flex items-center gap-2 sm:gap-3">
-          {/* Desktop-Only Dedicated Menu / Directory Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? "Close menu" : "Open studio directory"}
-            className={cn(
-              "hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 border-2 border-ink rounded-full font-mono text-xs font-bold uppercase tracking-wider shadow-brutal-sm transition-all cursor-pointer hover:-translate-y-0.5 hover:shadow-brutal select-none",
-              isMenuOpen
-                ? "bg-forest text-lime border-forest"
-                : "bg-paper text-ink hover:bg-lime hover:text-forest"
-            )}
-          >
-            {isMenuOpen ? (
-              <>
-                <X className="w-4 h-4" />
-                <span>CLOSE</span>
-              </>
-            ) : (
-              <>
-                <Menu className="w-4 h-4" />
-                <span>INDEX</span>
-              </>
-            )}
-          </button>
-
-          {/* Primary CTA */}
-          <TransitionLink
-            to="/#contact"
-            transitionTitle="LET'S TALK"
-            className="inline-flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-1 sm:py-2 bg-pink text-ink border-2 border-ink rounded-full shadow-brutal font-sans text-xs sm:text-sm font-bold uppercase tracking-tight hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all"
-          >
-            <span className="sm:hidden">TALK</span>
-            <span className="hidden sm:inline">{siteConfig.ctaLabel}</span>
-            <span className="font-mono text-xs">→</span>
-          </TransitionLink>
-        </div>
+        {/* Right placeholder keeping layout balanced */}
+        <div className="w-12 sm:w-16 pointer-events-none" />
       </header>
     </>
   );

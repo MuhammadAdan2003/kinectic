@@ -3,6 +3,7 @@ import { siteConfig } from "@/data/siteConfig";
 import { TransitionLink } from "@/components/ui/TransitionLink";
 import { useTransition } from "@/context/TransitionContext";
 import { useGSAP, gsap } from "@/lib/gsap";
+import { getLenis } from "@/lib/lenis";
 import { X, ArrowUpRight, ArrowUp } from "lucide-react";
 
 export const PullCurtainMenu: React.FC = () => {
@@ -15,35 +16,46 @@ export const PullCurtainMenu: React.FC = () => {
   useGSAP(
     () => {
       if (!curtainRef.current) return;
+      const lenis = getLenis();
 
       if (isFirstRender.current) {
         isFirstRender.current = false;
-        gsap.set(curtainRef.current, { yPercent: -100 });
+        gsap.set(curtainRef.current, { yPercent: -100, visibility: "hidden" });
         return;
       }
 
       if (isMenuOpen) {
+        lenis?.stop();
         document.body.style.overflow = "hidden";
+        gsap.set(curtainRef.current, { visibility: "visible" });
+
         const tl = gsap.timeline();
         tl.to(curtainRef.current, {
           yPercent: 0,
-          duration: 0.6,
-          ease: "expo.out",
+          duration: 0.52,
+          ease: "power4.out",
         });
+
         if (linksContainerRef.current) {
           tl.fromTo(
             linksContainerRef.current.children,
-            { y: 40, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.4, stagger: 0.06, ease: "power3.out" },
-            "-=0.3"
+            { y: 35, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.36, stagger: 0.045, ease: "power3.out" },
+            "-=0.28"
           );
         }
       } else {
-        document.body.style.overflow = "";
         gsap.to(curtainRef.current, {
           yPercent: -100,
-          duration: 0.5,
-          ease: "expo.in",
+          duration: 0.38,
+          ease: "power3.in",
+          onComplete: () => {
+            if (curtainRef.current) {
+              gsap.set(curtainRef.current, { visibility: "hidden" });
+            }
+            document.body.style.overflow = "";
+            lenis?.start();
+          },
         });
       }
     },
@@ -66,7 +78,7 @@ export const PullCurtainMenu: React.FC = () => {
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
-    if (deltaY < -60) {
+    if (deltaY < -50) {
       setIsMenuOpen(false);
     }
   };
@@ -76,7 +88,7 @@ export const PullCurtainMenu: React.FC = () => {
       ref={curtainRef}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="fixed inset-0 z-[160] bg-lime text-forest flex flex-col justify-between p-[var(--gutter)] pt-16 md:pt-20 border-b-4 border-ink overflow-y-auto transform-gpu"
+      className="fixed inset-0 z-[160] bg-lime text-forest flex flex-col justify-between p-[var(--gutter)] pt-16 md:pt-20 border-b-4 border-ink overflow-y-auto transform-gpu select-none"
     >
       {/* Top Header inside Curtain */}
       <div className="flex items-center justify-between border-b-2 border-forest/30 pb-6">
@@ -141,13 +153,13 @@ export const PullCurtainMenu: React.FC = () => {
         </div>
       </div>
 
-      {/* Push Up To Close Tactile Bar for Mobile */}
-      <div className="flex md:hidden justify-center py-2">
+      {/* Push Up To Close Tactile Bar for Both Desktop & Mobile */}
+      <div className="flex justify-center py-3">
         <button
           onClick={() => setIsMenuOpen(false)}
-          className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-forest text-lime border-2 border-forest rounded-full font-mono text-[11px] font-bold uppercase tracking-wider shadow-brutal-sm cursor-pointer"
+          className="inline-flex items-center gap-2 px-5 py-2 bg-forest text-lime border-2 border-forest rounded-full font-mono text-xs font-bold uppercase tracking-wider shadow-brutal-sm hover:bg-forest/90 hover:scale-105 active:scale-95 transition-all cursor-pointer"
         >
-          <ArrowUp className="w-3.5 h-3.5 animate-bounce" />
+          <ArrowUp className="w-4 h-4 animate-bounce" />
           <span>PUSH UP TO CLOSE</span>
         </button>
       </div>

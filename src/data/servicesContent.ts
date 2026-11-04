@@ -70,27 +70,27 @@ export const servicesContent: ServicesContent = {
     description: "People searching on Google already have their credit card in hand. We ensure your brand claims top position with unit economics that keep your finance team smiling.",
     capabilities: [
       {
-        code: "G/01",
+        code: "G-01",
         title: "High-Intent Search",
         description: "Laser-targeted keyword bidding protecting high-margin branded queries while scaling non-brand category keywords.",
       },
       {
-        code: "G/02",
+        code: "G-02",
         title: "Performance Max With Guardrails",
         description: "Harnessing algorithmic reach without burning cash on low-grade display networks or irrelevant spam inventory.",
       },
       {
-        code: "G/03",
+        code: "G-03",
         title: "Merchant Center & Shopping",
         description: "Optimized product feeds, custom titles, promotional badges, and title hierarchies that maximize impression share.",
       },
       {
-        code: "G/04",
+        code: "G-04",
         title: "YouTube Discovery & Shorts",
         description: "Skippable in-stream storytelling and direct-response vertical formats people actually watch through to checkout.",
       },
       {
-        code: "G/05",
+        code: "G-05",
         title: "Competitor Conquesting",
         description: "Ethical, high-converting comparison ads intercepting buyers actively researching your competitors.",
       },
@@ -112,27 +112,27 @@ export const servicesContent: ServicesContent = {
     description: "Nobody opens Instagram or TikTok hoping to see an advertisement. Your creative must earn the stop, hold the gaze, and compel the click. That is our obsession.",
     capabilities: [
       {
-        code: "C/01",
+        code: "C-01",
         title: "Short-Form Video & Reels",
         description: "High-velocity vertical creative engineered with first-second thumbstops and psychological problem-solution pacing.",
       },
       {
-        code: "C/02",
+        code: "C-02",
         title: "Advantage+ Machine Tuning",
         description: "Feeding social algorithms with diversified creative angles, native audio, and audience exclusion guardrails.",
       },
       {
-        code: "C/03",
+        code: "C-03",
         title: "UGC & Authentic Creator Pipeline",
         description: "Directing curated micro-creators to produce raw, high-trust testimonial and unboxing assets that convert cold traffic.",
       },
       {
-        code: "C/04",
+        code: "C-04",
         title: "Sequential Retargeting",
         description: "Dynamic product carousels, social proof showcases, and urgent offer reminders that close consideration loops.",
       },
       {
-        code: "C/05",
+        code: "C-05",
         title: "40+ Monthly Variant Testing",
         description: "Rapid iteration cycles testing 3 hooks × 2 body angles × 2 CTAs per week to reliably eliminate creative fatigue.",
       },
@@ -170,7 +170,7 @@ export const servicesContent: ServicesContent = {
         index: "03",
         title: "High-Velocity Landing Pages",
         description: "Sub-second loading landing pages and advertorials focused on a single conversion outcome.",
-        deliverables: ["Custom React & Next.js", "Shopify Theme Tweaks", "A/B Testing Loops", "Heatmap Analysis"],
+        deliverables: ["Custom React & Next.js", "Shopify Theme Tweaks", "Split Testing Loops", "Heatmap Analysis"],
       },
       {
         id: "analytics",

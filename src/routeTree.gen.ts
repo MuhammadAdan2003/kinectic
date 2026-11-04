@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from "./routes/__root"
 import { Route as IndexRouteImport } from "./routes/index"
+import { Route as GrowthLabRouteImport } from "./routes/growth-lab"
+import { Route as ManifestoRouteImport } from "./routes/manifesto"
 import { Route as ProcessRouteImport } from "./routes/process"
 import { Route as ServicesRouteImport } from "./routes/services"
 import { Route as WorkSlugRouteImport } from "./routes/work.$slug"
@@ -17,6 +19,16 @@ import { Route as WorkSlugRouteImport } from "./routes/work.$slug"
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GrowthLabRoute = GrowthLabRouteImport.update({
+  id: "/growth-lab",
+  path: "/growth-lab",
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManifestoRoute = ManifestoRouteImport.update({
+  id: "/manifesto",
+  path: "/manifesto",
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProcessRoute = ProcessRouteImport.update({
@@ -37,12 +49,16 @@ const WorkSlugRoute = WorkSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
+  "/growth-lab": typeof GrowthLabRoute
+  "/manifesto": typeof ManifestoRoute
   "/process": typeof ProcessRoute
   "/services": typeof ServicesRoute
   "/work/$slug": typeof WorkSlugRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
+  "/growth-lab": typeof GrowthLabRoute
+  "/manifesto": typeof ManifestoRoute
   "/process": typeof ProcessRoute
   "/services": typeof ServicesRoute
   "/work/$slug": typeof WorkSlugRoute
@@ -50,20 +66,43 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
+  "/growth-lab": typeof GrowthLabRoute
+  "/manifesto": typeof ManifestoRoute
   "/process": typeof ProcessRoute
   "/services": typeof ServicesRoute
   "/work/$slug": typeof WorkSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/" | "/process" | "/services" | "/work/$slug"
+  fullPaths:
+    | "/"
+    | "/growth-lab"
+    | "/manifesto"
+    | "/process"
+    | "/services"
+    | "/work/$slug"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/process" | "/services" | "/work/$slug"
-  id: "__root__" | "/" | "/process" | "/services" | "/work/$slug"
+  to:
+    | "/"
+    | "/growth-lab"
+    | "/manifesto"
+    | "/process"
+    | "/services"
+    | "/work/$slug"
+  id:
+    | "__root__"
+    | "/"
+    | "/growth-lab"
+    | "/manifesto"
+    | "/process"
+    | "/services"
+    | "/work/$slug"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GrowthLabRoute: typeof GrowthLabRoute
+  ManifestoRoute: typeof ManifestoRoute
   ProcessRoute: typeof ProcessRoute
   ServicesRoute: typeof ServicesRoute
   WorkSlugRoute: typeof WorkSlugRoute
@@ -76,6 +115,20 @@ declare module "@tanstack/react-router" {
       path: "/"
       fullPath: "/"
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/growth-lab": {
+      id: "/growth-lab"
+      path: "/growth-lab"
+      fullPath: "/growth-lab"
+      preLoaderRoute: typeof GrowthLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    "/manifesto": {
+      id: "/manifesto"
+      path: "/manifesto"
+      fullPath: "/manifesto"
+      preLoaderRoute: typeof ManifestoRouteImport
       parentRoute: typeof rootRouteImport
     }
     "/process": {
@@ -104,6 +157,8 @@ declare module "@tanstack/react-router" {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GrowthLabRoute: GrowthLabRoute,
+  ManifestoRoute: ManifestoRoute,
   ProcessRoute: ProcessRoute,
   ServicesRoute: ServicesRoute,
   WorkSlugRoute: WorkSlugRoute,

@@ -29,6 +29,8 @@ export const siteConfig: SiteConfig = {
     { label: "Home", path: "/", index: "01", transitionTitle: "HOME" },
     { label: "Services", path: "/services", index: "02", transitionTitle: "SERVICES & TOOLKIT" },
     { label: "Process", path: "/process", index: "03", transitionTitle: "HOW WE WORK" },
+    { label: "Manifesto", path: "/manifesto", index: "04", transitionTitle: "STUDIO MANIFESTO" },
+    { label: "Growth Lab", path: "/growth-lab", index: "05", transitionTitle: "GROWTH & ROAS LAB" },
   ],
   socials: [
     { label: "Instagram", href: "https://instagram.com" },

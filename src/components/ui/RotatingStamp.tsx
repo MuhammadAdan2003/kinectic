@@ -19,6 +19,8 @@ export const RotatingStamp: React.FC<RotatingStampProps> = ({
   className,
 }) => {
   const stampRef = useRef<SVGSVGElement>(null);
+  const rawId = React.useId();
+  const pathId = `circlePath-${rawId.replace(/:/g, "")}`;
   const prefersReducedMotion = useReducedMotion();
 
   useGSAP(
@@ -58,12 +60,12 @@ export const RotatingStamp: React.FC<RotatingStampProps> = ({
         className={cn("w-full h-full", colorStyles[color])}
       >
         <path
-          id="circlePath"
+          id={pathId}
           d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
           fill="none"
         />
         <text className="font-mono text-[8.5px] uppercase font-bold tracking-[0.2em] fill-current">
-          <textPath href="#circlePath" startOffset="0%">
+          <textPath href={`#${pathId}`} startOffset="0%">
             {text}
           </textPath>
         </text>

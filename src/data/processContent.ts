@@ -167,7 +167,7 @@ export const processContent: ProcessContent = {
       {
         index: "02",
         question: "What is your minimum monthly ad budget requirement?",
-        answer: "We do our highest impact work with brands spending at least $10,000/month on ad spend. Below that, algorithmic learning and rapid creative testing are constrained.",
+        answer: "We do our highest impact work with brands spending at least $10,000 monthly on ad spend. Below that, algorithmic learning and rapid creative testing are constrained.",
       },
       {
         index: "03",
@@ -197,7 +197,7 @@ export const processContent: ProcessContent = {
       {
         index: "08",
         question: "How do you communicate performance updates?",
-        answer: "A live Looker Studio dashboard available 24/7, a candid weekly voice memo highlighting what won and what we killed, and a monthly strategic growth planning session.",
+        answer: "A live Looker Studio dashboard available around the clock, a candid weekly voice memo highlighting what won and what we killed, and a monthly strategic growth planning session.",
       },
     ],
   },

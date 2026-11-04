@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { useGSAP, gsap } from "@/lib/gsap";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface ScrollGrowthChartSvgProps {
   className?: string;
@@ -12,12 +13,26 @@ export const ScrollGrowthChartSvg: React.FC<ScrollGrowthChartSvgProps> = ({ clas
   const point1Ref = useRef<SVGGElement>(null);
   const point2Ref = useRef<SVGGElement>(null);
   const point3Ref = useRef<SVGGElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useGSAP(
     () => {
       if (!pathRef.current || !containerRef.current || !clipRectRef.current) return;
 
       const pathLength = pathRef.current.getTotalLength() || 620;
+
+      if (prefersReducedMotion) {
+        gsap.set(pathRef.current, {
+          strokeDasharray: pathLength,
+          strokeDashoffset: 0,
+        });
+        gsap.set(clipRectRef.current, { attr: { width: 600 } });
+        gsap.set([point1Ref.current, point2Ref.current, point3Ref.current].filter(Boolean), {
+          scale: 1,
+          opacity: 1,
+        });
+        return;
+      }
 
       // Initialize path stroke dash and clip rect width
       gsap.set(pathRef.current, {
@@ -27,20 +42,26 @@ export const ScrollGrowthChartSvg: React.FC<ScrollGrowthChartSvgProps> = ({ clas
 
       gsap.set(clipRectRef.current, { attr: { width: 0 } });
 
-      const points = [point1Ref.current, point2Ref.current, point3Ref.current].filter(Boolean);
-      gsap.set(points, { scale: 0, opacity: 0, transformOrigin: "center center" });
+      // Point 1 (DAY 0 baseline) is always visible so chart is never an empty void
+      if (point1Ref.current) {
+        gsap.set(point1Ref.current, { scale: 1, opacity: 1, transformOrigin: "center center" });
+      }
+
+      // Points 2 and 3 pop in as line reaches them
+      const futurePoints = [point2Ref.current, point3Ref.current].filter(Boolean);
+      gsap.set(futurePoints, { scale: 0, opacity: 0, transformOrigin: "center center" });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 88%",
-          end: "center 50%",
-          scrub: true,
+          start: "top 95%",
+          end: "bottom 80%",
+          scrub: 0.5,
           invalidateOnRefresh: true,
         },
       });
 
-      // 1. Draw path line from 0 to 1 in exact 1:1 scroll lockstep
+      // 1. Draw dynamic lime path line in smooth scrub lockstep
       tl.to(
         pathRef.current,
         {
@@ -62,21 +83,7 @@ export const ScrollGrowthChartSvg: React.FC<ScrollGrowthChartSvgProps> = ({ clas
         0
       );
 
-      // 3. Coordinate Point 1: appears at beginning (progress 0.05)
-      if (point1Ref.current) {
-        tl.to(
-          point1Ref.current,
-          {
-            scale: 1,
-            opacity: 1,
-            ease: "back.out(2)",
-            duration: 0.12,
-          },
-          0.04
-        );
-      }
-
-      // 4. Coordinate Point 2: appears exactly when stroke passes x=320 (progress 0.50)
+      // 3. Coordinate Point 2: appears when stroke passes x=320 (progress 0.45)
       if (point2Ref.current) {
         tl.to(
           point2Ref.current,
@@ -84,13 +91,13 @@ export const ScrollGrowthChartSvg: React.FC<ScrollGrowthChartSvgProps> = ({ clas
             scale: 1,
             opacity: 1,
             ease: "back.out(2)",
-            duration: 0.14,
+            duration: 0.15,
           },
-          0.48
+          0.45
         );
       }
 
-      // 5. Coordinate Point 3: arrives at 6.4X peak (progress 0.92)
+      // 4. Coordinate Point 3: arrives at 6.4X peak (progress 0.88)
       if (point3Ref.current) {
         tl.to(
           point3Ref.current,
@@ -100,11 +107,11 @@ export const ScrollGrowthChartSvg: React.FC<ScrollGrowthChartSvgProps> = ({ clas
             ease: "back.out(2)",
             duration: 0.15,
           },
-          0.90
+          0.88
         );
       }
     },
-    { scope: containerRef }
+    { scope: containerRef, dependencies: [prefersReducedMotion] }
   );
 
   return (
@@ -145,15 +152,38 @@ export const ScrollGrowthChartSvg: React.FC<ScrollGrowthChartSvgProps> = ({ clas
           </defs>
 
           {/* Subtle Grid Guidelines */}
-          <line x1="0" y1="50" x2="600" y2="50" stroke="var(--paper)" strokeOpacity="0.08" strokeDasharray="4 4" />
-          <line x1="0" y1="110" x2="600" y2="110" stroke="var(--paper)" strokeOpacity="0.08" strokeDasharray="4 4" />
-          <line x1="0" y1="170" x2="600" y2="170" stroke="var(--paper)" strokeOpacity="0.08" strokeDasharray="4 4" />
-          <line x1="0" y1="230" x2="600" y2="230" stroke="var(--paper)" strokeOpacity="0.15" />
+          <line x1="0" y1="50" x2="600" y2="50" stroke="var(--paper)" strokeOpacity="0.12" strokeDasharray="4 4" />
+          <line x1="0" y1="110" x2="600" y2="110" stroke="var(--paper)" strokeOpacity="0.12" strokeDasharray="4 4" />
+          <line x1="0" y1="170" x2="600" y2="170" stroke="var(--paper)" strokeOpacity="0.12" strokeDasharray="4 4" />
+          <line x1="0" y1="230" x2="600" y2="230" stroke="var(--paper)" strokeOpacity="0.25" strokeWidth="1.5" />
 
           {/* Vertical Guides */}
-          <line x1="120" y1="0" x2="120" y2="230" stroke="var(--paper)" strokeOpacity="0.06" strokeDasharray="4 4" />
-          <line x1="320" y1="0" x2="320" y2="230" stroke="var(--paper)" strokeOpacity="0.06" strokeDasharray="4 4" />
-          <line x1="580" y1="0" x2="580" y2="230" stroke="var(--paper)" strokeOpacity="0.06" strokeDasharray="4 4" />
+          <line x1="120" y1="0" x2="120" y2="230" stroke="var(--paper)" strokeOpacity="0.08" strokeDasharray="4 4" />
+          <line x1="320" y1="0" x2="320" y2="230" stroke="var(--paper)" strokeOpacity="0.08" strokeDasharray="4 4" />
+          <line x1="580" y1="0" x2="580" y2="230" stroke="var(--paper)" strokeOpacity="0.08" strokeDasharray="4 4" />
+
+          {/* Y-Axis Value Labels */}
+          <text x="8" y="54" fill="var(--paper)" opacity="0.45" fontSize="9" fontFamily="var(--font-mono)">
+            +$48M
+          </text>
+          <text x="8" y="114" fill="var(--paper)" opacity="0.45" fontSize="9" fontFamily="var(--font-mono)">
+            +$30M
+          </text>
+          <text x="8" y="174" fill="var(--paper)" opacity="0.45" fontSize="9" fontFamily="var(--font-mono)">
+            +$15M
+          </text>
+          <text x="8" y="226" fill="var(--paper)" opacity="0.45" fontSize="9" fontFamily="var(--font-mono)">
+            $0M
+          </text>
+
+          {/* Trajectory Guide Track (Always clearly visible with neo-brutalist blueprint line) */}
+          <path
+            d="M 20 220 C 140 215 220 180 320 120 C 420 60 500 25 580 18"
+            stroke="var(--paper)"
+            strokeOpacity="0.38"
+            strokeWidth="2.5"
+            strokeDasharray="6 6"
+          />
 
           {/* Shaded Area Fill Under Curve with Synchronized Clip */}
           <g clipPath="url(#chart-reveal-clip)">
@@ -174,10 +204,10 @@ export const ScrollGrowthChartSvg: React.FC<ScrollGrowthChartSvgProps> = ({ clas
             strokeLinejoin="round"
           />
 
-          {/* Point 1: Kickoff baseline */}
+          {/* Point 1: Kickoff baseline (Always Visible) */}
           <g ref={point1Ref} transform="translate(20, 220)">
             <circle r="7" fill="var(--paper)" stroke="var(--ink)" strokeWidth="3" />
-            <text x="0" y="24" fill="var(--paper)" opacity="0.6" fontSize="10" fontFamily="var(--font-mono)" textAnchor="middle">
+            <text x="0" y="24" fill="var(--paper)" opacity="0.75" fontSize="10" fontFamily="var(--font-mono)" textAnchor="middle">
               DAY 0
             </text>
           </g>
@@ -189,7 +219,7 @@ export const ScrollGrowthChartSvg: React.FC<ScrollGrowthChartSvgProps> = ({ clas
             <text x="0" y="-22" fill="var(--ink)" fontSize="10" fontWeight="bold" fontFamily="var(--font-mono)" textAnchor="middle">
               +140% ROAS
             </text>
-            <text x="0" y="24" fill="var(--paper)" opacity="0.6" fontSize="10" fontFamily="var(--font-mono)" textAnchor="middle">
+            <text x="0" y="24" fill="var(--paper)" opacity="0.75" fontSize="10" fontFamily="var(--font-mono)" textAnchor="middle">
               WEEK 4
             </text>
           </g>

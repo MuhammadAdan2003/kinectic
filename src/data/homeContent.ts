@@ -159,7 +159,7 @@ export const homeContent: HomeContent = {
     eyebrow: "(06) Say hi",
     heading: "Got something to make noise about?",
     subheading: "Tell us what you sell and where you want to grow. Every inquiry starts with a free 30-minute growth teardown — no sales pitch, zero strings.",
-    budgetOptions: ["< $10K/mo", "$10K – $50K", "$50K – $150K", "$150K+"],
+    budgetOptions: ["< $10K monthly", "$10K – $50K", "$50K – $150K", "$150K+"],
     channelOptions: ["Paid Search", "Short-Form Video", "Full Funnel (Both)", "Not Sure Yet"],
   },
 };

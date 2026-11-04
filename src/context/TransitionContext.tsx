@@ -52,7 +52,7 @@ export const TransitionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         const element = document.getElementById(hash);
         if (element) {
           if (lenis) {
-            lenis.scrollTo(element, { offset: -60, duration: 1.2 });
+            lenis.scrollTo(element, { offset: -60, duration: 0.75 });
           } else {
             element.scrollIntoView({ behavior: "smooth" });
           }

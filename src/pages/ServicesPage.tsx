@@ -25,7 +25,7 @@ export const ServicesPage: React.FC = () => {
           { label: "PAID SEARCH", color: "lime" },
           { label: "SHORT-FORM UGC", color: "pink" },
           { label: "CAPI ATTRIBUTION", color: "sun" },
-          { label: "A/B FUNNELS", color: "blue" },
+          { label: "GROWTH FUNNELS", color: "blue" },
         ]}
       />
 

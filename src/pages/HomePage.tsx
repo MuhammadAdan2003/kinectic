@@ -17,7 +17,10 @@ import { ScrollSpinStarSvg } from "@/components/ui/svg/ScrollSpinStarSvg";
 import { ScrollInShape } from "@/components/ui/ScrollInShape";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { BackgroundRoadLine } from "@/components/ui/svg/BackgroundRoadLine";
-import { WorkShowcaseConsole } from "@/components/sections/WorkShowcaseConsole";
+import { ProcessStackedFolderSection } from "@/components/sections/ProcessStackedFolderSection";
+import { GrowthSplitEngineSection } from "@/components/sections/GrowthSplitEngineSection";
+import { Work3DCarousel } from "@/components/sections/Work3DCarousel";
+import { BubbleFlood } from "@/components/ui/BubbleFlood";
 import { useGSAP, gsap } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useTransition } from "@/context/TransitionContext";
@@ -340,8 +343,8 @@ export const HomePage: React.FC = () => {
             end="center 52%"
           >
             <div className="px-5 py-2 bg-forest text-lime border-2 border-ink shadow-brutal font-mono text-xs font-bold uppercase tracking-wider rounded-full inline-flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-lime animate-ping" />
-              <span>ATTENTION CAPTURE PROTOCOL // 1.4s HOOK</span>
+              <span className="w-2 h-2 rounded-xs bg-lime border border-ink" />
+              <span>ATTENTION CAPTURE PROTOCOL • 1.4s HOOK</span>
             </div>
           </ScrollInShape>
         </div>
@@ -397,7 +400,7 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* Words illuminate as you scroll down */}
-          <p className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase tracking-tight leading-[0.92] flex flex-wrap gap-x-4 gap-y-2 max-w-6xl">
+          <p className="relative z-20 font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase tracking-tight leading-[0.92] flex flex-wrap gap-x-4 gap-y-2 max-w-6xl">
             {manifestWords(manifestoWords)}
           </p>
 
@@ -451,94 +454,32 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* =====================================================================
-          03 SELECTED WORK SHOWCASE (Expansive Full-Bleed Grid)
+          03 THE PROCESS: STACKED BINDER FOLDER CARDS (Image 1 from Mechay)
           ===================================================================== */}
-      <section id="work" className="relative bg-ink text-paper px-[var(--gutter)] py-28 border-b-2 border-ink w-full">
-        {/* Floating Scroll-In Shape from TOP */}
-        <div className="flex justify-center -mt-10 mb-8 relative z-20">
-          <ScrollInShape
-            direction="top"
-            distance={130}
-            initialRotate={4}
-            restingRotate={0}
-            start="top 90%"
-            end="center 55%"
-          >
-            <div className="px-6 py-2.5 bg-lime text-forest border-2 border-ink shadow-brutal-lg font-mono text-xs sm:text-sm font-bold uppercase tracking-wider rounded-full flex items-center gap-2">
-              <span>✦</span>
-              <span>8-FIGURE DIRECT-RESPONSE SCALING INFRASTRUCTURE</span>
-              <span>✦</span>
-            </div>
-          </ScrollInShape>
-        </div>
-
-        <div className="w-full flex flex-col gap-14 relative z-20">
-          <ScrollReveal variant="fade-up" distance={35}>
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b-2 border-paper/20 pb-8">
-              <div>
-                <SectionEyebrow index="04" label="Selected Work" color="paper" />
-                <h2 className="font-display text-5xl sm:text-7xl md:text-8xl uppercase tracking-tight leading-none text-paper mt-3">
-                  <MaskedText text="WORK WE ARE LOUD ABOUT." splitBy="lines" trigger="scroll" />
-                </h2>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <TransitionLink
-                  to="/services"
-                  transitionTitle="SERVICES & TOOLKIT"
-                  className="px-6 py-3 bg-lime text-forest border-2 border-ink rounded-full font-mono text-xs font-bold uppercase tracking-wider hover:scale-105 transition-transform shadow-brutal-sm"
-                >
-                  See All Capabilities →
-                </TransitionLink>
-              </div>
-            </div>
-          </ScrollReveal>
-
-          {/* Dynamic Shapes Sliding in from Left and Right */}
-          <div className="flex flex-wrap items-center justify-between gap-4 -mt-6 mb-2 pointer-events-none">
-            <ScrollInShape
-              direction="left"
-              distance={240}
-              initialRotate={-14}
-              restingRotate={-3}
-              start="top 85%"
-              end="center 50%"
-              className="pointer-events-auto"
-            >
-              <div className="px-4 py-2 bg-pink text-ink border-2 border-paper rounded-xl shadow-brutal font-mono text-xs font-bold uppercase flex items-center gap-2">
-                <span>★</span>
-                <span>+$24.8M NET ATTRIBUTED</span>
-              </div>
-            </ScrollInShape>
-
-            <ScrollInShape
-              direction="right"
-              distance={240}
-              initialRotate={16}
-              restingRotate={4}
-              start="top 85%"
-              end="center 50%"
-              className="pointer-events-auto"
-            >
-              <div className="px-4 py-2 bg-sun text-ink border-2 border-paper rounded-xl shadow-brutal font-mono text-xs font-bold uppercase flex items-center gap-2">
-                <span>⚡</span>
-                <span>PROVEN ACQUISITION ASSETS</span>
-              </div>
-            </ScrollInShape>
-          </div>
-
-          {/* Interactive Kinetic Campaign Showcase Console */}
-          <ScrollReveal variant="scale-up" distance={30} delay={0.1}>
-            <WorkShowcaseConsole />
-          </ScrollReveal>
-        </div>
-      </section>
+      <ProcessStackedFolderSection />
 
       {/* =====================================================================
-          04 THE RECEIPTS (Full-Bleed Tomato KPI Showcase)
+          03.5 INTERACTIVE GROWTH SPLIT ENGINE (Traditional Fluff vs Kinetic)
           ===================================================================== */}
-      <section id="receipts" className="paper-tex relative bg-tomato text-ink px-[var(--gutter)] py-28 border-b-2 border-ink overflow-hidden w-full">
-        {/* Floating Scroll-In Shape from TOP */}
+      <GrowthSplitEngineSection />
+
+      {/* =====================================================================
+          04 SELECTED WORK: 3D PERSPECTIVE SPINNING CAROUSEL (Image 2 from Mechay)
+          ===================================================================== */}
+      <Work3DCarousel />
+
+      {/* =====================================================================
+          04 THE RECEIPTS (Full-Bleed Tomato KPI Showcase Revealed via Bubble)
+          ===================================================================== */}
+      <section id="receipts" className="relative z-30 bg-ink overflow-hidden w-full border-b-2 border-ink">
+        {/* Orange bubble grows out of the highway mouth and floods this section */}
+        <BubbleFlood />
+
+        {/* Revealed Content Container: Unclipped, full-speed GPU accelerated */}
+        <div
+          className="receipts-reveal-content relative z-10 w-full bg-tomato text-ink px-[var(--gutter)] py-28 overflow-hidden transform-gpu"
+        >
+          {/* Floating Scroll-In Shape from TOP */}
         <div className="flex justify-center -mt-10 mb-8 relative z-20">
           <ScrollInShape
             direction="top"
@@ -550,7 +491,7 @@ export const HomePage: React.FC = () => {
           >
             <div className="px-6 py-2.5 bg-paper text-ink border-2 border-ink shadow-brutal font-mono text-xs font-bold uppercase tracking-wider rounded-full inline-flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-forest" />
-              <span>AUDITED SERVER-SIDE CAPI // ZERO ESTIMATION</span>
+              <span>AUDITED SERVER-SIDE CAPI • ZERO ESTIMATION</span>
             </div>
           </ScrollInShape>
         </div>
@@ -654,9 +595,8 @@ export const HomePage: React.FC = () => {
         </div>
 
         {/* Dynamic Scroll-Traced Revenue Growth Chart */}
-        <ScrollReveal variant="fade-up" distance={35} delay={0.15}>
-          <ScrollGrowthChartSvg className="mt-14 relative z-20" />
-        </ScrollReveal>
+        <ScrollGrowthChartSvg className="mt-14 relative z-20" />
+        </div>
       </section>
 
       {/* =====================================================================
@@ -708,7 +648,7 @@ export const HomePage: React.FC = () => {
           >
             <div className="px-4 py-2 bg-sun text-ink border-2 border-paper rounded-xl shadow-brutal font-mono text-xs font-bold uppercase flex items-center gap-2">
               <span>★</span>
-              <span>LIMITED TO 3 BRANDS / MO</span>
+              <span>LIMITED TO 3 BRANDS MONTHLY</span>
             </div>
           </ScrollInShape>
         </div>
@@ -818,8 +758,8 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 60 to 80px Thick Highway Road Line Winding Through the Background */}
-      <BackgroundRoadLine containerRef={pageRef} roadWidth={74} className="z-[10]" />
+      {/* Thick Highway Road Line Winding Through Sections with Emerging Particles */}
+      <BackgroundRoadLine containerRef={pageRef} roadWidth={128} className="z-[10]" />
     </div>
   );
 };

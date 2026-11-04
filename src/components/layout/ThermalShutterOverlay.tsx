@@ -33,12 +33,12 @@ export const ThermalShutterOverlay: React.FC = () => {
             onComplete: () => resolve(),
           });
 
-          // 1. Columns smoothly slide down with majestic pace to cover screen
+          // 1. Columns drop down with fast, tactile snap to cover screen
           tl.to(columnsRef.current, {
             yPercent: 0,
-            duration: 0.7,
-            stagger: 0.05,
-            ease: "power3.inOut",
+            duration: 0.28,
+            stagger: 0.02,
+            ease: "power3.out",
           });
 
           // 2. Pop in the centered route stamp
@@ -48,15 +48,15 @@ export const ThermalShutterOverlay: React.FC = () => {
               {
                 scale: 1,
                 opacity: 1,
-                duration: 0.45,
-                ease: "back.out(1.5)",
+                duration: 0.22,
+                ease: "back.out(1.6)",
               },
-              "-=0.35"
+              "-=0.18"
             );
           }
 
-          // 3. Generous, comfortable reading hold so user can easily read title & status
-          tl.to({}, { duration: 0.95 });
+          // 3. Crisp, responsive reading beat
+          tl.to({}, { duration: 0.18 });
         });
       },
 
@@ -76,26 +76,26 @@ export const ThermalShutterOverlay: React.FC = () => {
             },
           });
 
-          // 1. Fade stamp smoothly
+          // 1. Fade stamp crisply
           if (stampRef.current) {
             tl.to(stampRef.current, {
-              scale: 0.85,
+              scale: 0.9,
               opacity: 0,
-              duration: 0.3,
-              ease: "power2.inOut",
+              duration: 0.16,
+              ease: "power2.in",
             });
           }
 
-          // 2. Tear/slide columns down offscreen with smooth editorial pace
+          // 2. Tear/slide columns down offscreen with fast, smooth editorial slice
           tl.to(
             columnsRef.current,
             {
               yPercent: 105,
-              duration: 0.75,
-              stagger: 0.05,
+              duration: 0.30,
+              stagger: 0.02,
               ease: "power3.inOut",
             },
-            "-=0.15"
+            "-=0.10"
           );
         });
       },
@@ -109,7 +109,7 @@ export const ThermalShutterOverlay: React.FC = () => {
     <div
       ref={overlayRef}
       aria-hidden="true"
-      className="fixed inset-0 z-[200] pointer-events-none overflow-hidden"
+      className="fixed inset-0 z-[200] pointer-events-none overflow-hidden hidden"
     >
       {/* 5 Vertical Thermal Paper Columns */}
       <div className="absolute inset-0 flex w-full h-full">
@@ -156,7 +156,7 @@ export const ThermalShutterOverlay: React.FC = () => {
           </span>
 
           <div className="flex items-center gap-2 font-mono text-xs font-bold opacity-80 uppercase tracking-widest pt-1 sm:pt-0 sm:border-l-2 sm:border-forest/30 sm:pl-4">
-            <span className="w-2 h-2 rounded-full bg-forest animate-ping" />
+            <span className="w-1.5 h-1.5 rounded-xs bg-forest" />
             <span>PREPARING CANVAS</span>
           </div>
         </div>
