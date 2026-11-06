@@ -1,11 +1,17 @@
 import React from "react";
 import { siteConfig } from "@/data/siteConfig";
 import { TransitionLink } from "@/components/ui/TransitionLink";
+import { getLenis } from "@/lib/lenis";
 import { ArrowUp } from "lucide-react";
 
 export const SiteFooter: React.FC = () => {
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(0, { duration: 1.0 });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (
@@ -99,8 +105,8 @@ export const SiteFooter: React.FC = () => {
         </div>
 
         {/* Giant Edge-to-Edge Anton Wordmark */}
-        <div className="w-full text-center overflow-hidden select-none -my-6">
-          <span className="font-display text-[clamp(72px,19vw,280px)] uppercase tracking-tighter leading-none text-paper/90 block">
+        <div className="w-full text-center overflow-hidden select-none -my-4 3xl:-my-6">
+          <span className="font-display text-[clamp(52px,13vw,175px)] 3xl:text-[clamp(72px,19vw,280px)] uppercase tracking-tighter leading-none text-paper/90 block">
             {siteConfig.name}
           </span>
         </div>

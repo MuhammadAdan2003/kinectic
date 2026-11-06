@@ -18,10 +18,10 @@ import { ScrollInShape } from "@/components/ui/ScrollInShape";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { BackgroundRoadLine } from "@/components/ui/svg/BackgroundRoadLine";
 import { ProcessStackedFolderSection } from "@/components/sections/ProcessStackedFolderSection";
-import { GrowthSplitEngineSection } from "@/components/sections/GrowthSplitEngineSection";
+import { CreativeSignalLabSection } from "@/components/sections/CreativeSignalLabSection";
 import { Work3DCarousel } from "@/components/sections/Work3DCarousel";
 import { BubbleFlood } from "@/components/ui/BubbleFlood";
-import { useGSAP, gsap } from "@/lib/gsap";
+import { useGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useTransition } from "@/context/TransitionContext";
 import { ArrowRight } from "lucide-react";
@@ -99,6 +99,10 @@ export const HomePage: React.FC = () => {
           "-=0.5"
         );
       }
+
+      // Refresh ScrollTrigger once layout & fonts have settled
+      const refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 200);
+      return () => window.clearTimeout(refreshTimer);
     },
     { dependencies: [isInitialLoaded, prefersReducedMotion] }
   );
@@ -140,7 +144,7 @@ export const HomePage: React.FC = () => {
           ===================================================================== */}
       <section
         id="hero"
-        className="paper-tex relative min-h-[96vh] flex flex-col justify-between items-center text-center bg-paper text-ink px-[var(--gutter)] pt-28 pb-10 border-b-2 border-ink overflow-hidden"
+        className="paper-tex relative min-h-[88vh] 3xl:min-h-[96vh] flex flex-col justify-between items-center text-center bg-paper text-ink px-[var(--gutter)] pt-24 3xl:pt-28 pb-8 3xl:pb-10 border-b-2 border-ink overflow-hidden"
       >
         {/* Top Eyebrow Header Strip */}
         <div
@@ -198,21 +202,21 @@ export const HomePage: React.FC = () => {
             <CursorPointer color="pink" label="THUMBSTOPPED" />
           </div>
 
-          {/* MAIN MONUMENTAL DISPLAY HEADLINE (Masked line slides for buttery post-loader reveal) */}
-          <h1 className="font-display text-[clamp(60px,14.5vw,230px)] uppercase tracking-tight leading-[0.84] text-ink text-center max-w-none">
-            <div className="relative inline-block overflow-hidden py-1">
+          {/* MAIN MONUMENTAL DISPLAY HEADLINE (Compact on 1200/1366/1400, original monumental 230px on 1920+) */}
+          <h1 className="font-display text-[clamp(38px,6.4vw,94px)] 3xl:text-[clamp(60px,14.5vw,230px)] uppercase tracking-tight leading-[0.88] 3xl:leading-[0.84] text-ink text-center max-w-none">
+            <div className="relative inline-block overflow-hidden py-1 3xl:py-1.5 px-1.5 3xl:px-2">
               <div ref={heroLine1Ref} className="will-change-transform inline-block">
                 {homeContent.headlineLine1}
               </div>
             </div>
 
-            <div className="block text-forest font-serif italic lowercase font-normal text-[0.75em] sm:text-[0.82em] leading-none my-1 tracking-normal overflow-hidden py-1">
+            <div className="block text-forest font-serif italic lowercase font-normal text-[0.74em] sm:text-[0.8em] 3xl:text-[0.82em] leading-none my-1 tracking-normal overflow-hidden py-1 3xl:py-1.5 px-2 3xl:px-3">
               <div ref={heroItalicRef} className="will-change-transform inline-block">
                 and then
               </div>
             </div>
 
-            <div className="relative inline-block overflow-hidden py-1">
+            <div className="relative inline-block overflow-hidden py-1 3xl:py-1.5 px-1.5 3xl:px-2">
               <div ref={heroLine2Ref} className="will-change-transform inline-block">
                 {homeContent.headlineLine2}
               </div>
@@ -226,7 +230,7 @@ export const HomePage: React.FC = () => {
             </span>
           </div>
 
-          <div className="hero-pop-sticker absolute bottom-[8%] right-[8%] sm:right-[16%] lg:right-[22%] z-20 pointer-events-auto transform -rotate-8 hover:scale-110 transition-transform">
+          <div className="hero-pop-sticker absolute bottom-[8%] 3xl:bottom-[16%] right-[8%] sm:right-[16%] lg:right-[22%] 3xl:right-[15%] z-20 pointer-events-auto transform -rotate-8 hover:scale-110 transition-transform">
             <span className="px-3.5 py-1.5 bg-tomato text-ink border-2 border-ink rounded-full shadow-brutal font-mono text-xs font-bold uppercase tracking-wider">
               -42% CPA
             </span>
@@ -244,8 +248,8 @@ export const HomePage: React.FC = () => {
             </span>
           </div>
 
-          {/* Interactive Draggable Hero Stickers (Free-floating background layer) */}
-          <div className="hidden xl:block absolute inset-0 pointer-events-none">
+          {/* Interactive Draggable Hero Stickers (Free-floating background layer on 1920+ ultra-wide screens) */}
+          <div className="hidden 3xl:block absolute inset-0 pointer-events-none">
             {homeContent.stickers.map((st) => (
               <div
                 key={st.id}
@@ -275,33 +279,33 @@ export const HomePage: React.FC = () => {
           className="w-full grid grid-cols-1 md:grid-cols-3 items-center justify-between gap-6 pt-6 border-t-2 border-ink/20 text-left relative z-20"
         >
           {/* Studio Hook Description */}
-          <p className="font-sans text-sm sm:text-base text-ink/85 leading-relaxed max-w-lg">
+          <p className="font-sans text-xs sm:text-sm 3xl:text-base text-ink/85 leading-relaxed max-w-md 3xl:max-w-lg">
             {homeContent.description}
           </p>
 
           {/* Center Call-to-Action Cluster */}
-          <div className="flex flex-wrap items-center justify-start md:justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-start md:justify-center gap-2.5 3xl:gap-3">
             <TransitionLink
               to="/#contact"
               transitionTitle="START A PROJECT"
-              className="px-7 py-3.5 bg-pink text-ink border-2 border-ink rounded-full font-sans text-sm font-bold uppercase tracking-tight shadow-brutal hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all inline-flex items-center gap-2"
+              className="px-5 3xl:px-7 py-2.5 3xl:py-3.5 bg-pink text-ink border-2 border-ink rounded-full font-sans text-xs sm:text-sm font-bold uppercase tracking-tight shadow-brutal hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all inline-flex items-center gap-2"
             >
               <span>{homeContent.ctaPrimary.label}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 h-3.5 3xl:w-4 3xl:h-4" />
             </TransitionLink>
 
             <TransitionLink
               to="/services"
               transitionTitle="SERVICES & TOOLKIT"
-              className="px-6 py-3.5 bg-paper text-ink border-2 border-ink rounded-full font-sans text-sm font-bold uppercase tracking-tight hover:bg-lime hover:text-forest transition-colors shadow-brutal-sm"
+              className="px-5 3xl:px-6 py-2.5 3xl:py-3.5 bg-paper text-ink border-2 border-ink rounded-full font-sans text-xs sm:text-sm font-bold uppercase tracking-tight hover:bg-lime hover:text-forest transition-colors shadow-brutal-sm"
             >
               Explore Services
             </TransitionLink>
           </div>
 
           {/* Right: Spinning Audio / Receipt Stamp */}
-          <div className="flex justify-start md:justify-end">
-            <RotatingStamp text={homeContent.stampText} size={120} />
+          <div className="flex justify-start md:justify-end 3xl:scale-125 3xl:origin-right">
+            <RotatingStamp text={homeContent.stampText} size={96} />
           </div>
         </div>
       </section>
@@ -331,9 +335,9 @@ export const HomePage: React.FC = () => {
       {/* =====================================================================
           02 MANIFESTO SECTION (Full-Bleed, Monumental Typography, Scroll Scrub)
           ===================================================================== */}
-      <section id="manifesto" className="paper-tex relative bg-lime text-forest px-[var(--gutter)] py-24 md:py-36 border-b-2 border-ink overflow-hidden w-full">
+      <section id="manifesto" className="paper-tex relative bg-lime text-forest px-[var(--gutter)] py-16 md:py-24 3xl:py-36 border-b-2 border-ink overflow-hidden w-full">
         {/* Floating Scroll-In Shape from TOP */}
-        <div className="flex justify-center -mt-8 mb-6 relative z-20">
+        <div className="flex justify-center -mt-8 3xl:-mt-12 mb-6 3xl:mb-8 relative z-20">
           <ScrollInShape
             direction="top"
             distance={130}
@@ -349,7 +353,7 @@ export const HomePage: React.FC = () => {
           </ScrollInShape>
         </div>
 
-        <div ref={manifestoRef} className="w-full flex flex-col gap-10 relative z-20">
+        <div ref={manifestoRef} className="w-full flex flex-col gap-10 3xl:gap-12 relative z-20">
           <ScrollReveal variant="fade-up" distance={25}>
             <div className="flex items-center justify-between border-b-2 border-forest/20 pb-4">
               <SectionEyebrow label={homeContent.manifesto.eyebrow} color="forest" />
@@ -400,17 +404,17 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* Words illuminate as you scroll down */}
-          <p className="relative z-20 font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl uppercase tracking-tight leading-[0.92] flex flex-wrap gap-x-4 gap-y-2 max-w-6xl">
+          <p className="relative z-20 font-display text-[clamp(26px,3.4vw,48px)] 3xl:text-8xl uppercase tracking-tight leading-[0.94] 3xl:leading-[0.92] flex flex-wrap gap-x-3 3xl:gap-x-4 gap-y-1.5 3xl:gap-y-2 max-w-5xl 3xl:max-w-6xl">
             {manifestWords(manifestoWords)}
           </p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-6 border-t-2 border-forest/20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-6 3xl:pt-8 border-t-2 border-forest/20">
             <div className="hidden lg:flex lg:col-span-1 justify-center pt-2">
-              <ScrollSnakeSvg color="forest" height={260} />
+              <ScrollSnakeSvg color="forest" height={200} />
             </div>
 
             <ScrollReveal variant="fade-left" distance={35} className="lg:col-span-6">
-              <p className="font-sans text-lg sm:text-2xl font-medium leading-relaxed opacity-90 border-l-4 border-forest pl-6 py-2">
+              <p className="font-sans text-sm sm:text-base lg:text-lg 3xl:text-2xl font-medium leading-relaxed opacity-90 border-l-4 border-forest pl-5 3xl:pl-6 py-1.5 3xl:py-2">
                 {homeContent.manifesto.body}
               </p>
             </ScrollReveal>
@@ -459,9 +463,9 @@ export const HomePage: React.FC = () => {
       <ProcessStackedFolderSection />
 
       {/* =====================================================================
-          03.5 INTERACTIVE GROWTH SPLIT ENGINE (Traditional Fluff vs Kinetic)
+          03.5 INTERACTIVE CREATIVE SIGNAL LAB (Anatomy of a Thumbstopper)
           ===================================================================== */}
-      <GrowthSplitEngineSection />
+      <CreativeSignalLabSection />
 
       {/* =====================================================================
           04 SELECTED WORK: 3D PERSPECTIVE SPINNING CAROUSEL (Image 2 from Mechay)
@@ -477,7 +481,7 @@ export const HomePage: React.FC = () => {
 
         {/* Revealed Content Container: Unclipped, full-speed GPU accelerated */}
         <div
-          className="receipts-reveal-content relative z-10 w-full bg-tomato text-ink px-[var(--gutter)] py-28 overflow-hidden transform-gpu"
+          className="receipts-reveal-content relative z-10 w-full bg-tomato text-ink px-[var(--gutter)] py-20 3xl:py-28 overflow-hidden transform-gpu"
         >
           {/* Floating Scroll-In Shape from TOP */}
         <div className="flex justify-center -mt-10 mb-8 relative z-20">
@@ -529,23 +533,23 @@ export const HomePage: React.FC = () => {
           </ScrollInShape>
         </div>
 
-        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-20">
+        <div className="max-w-6xl mx-auto 3xl:max-w-none w-full grid grid-cols-1 lg:grid-cols-2 gap-12 3xl:gap-16 items-center relative z-20">
           <ScrollReveal variant="fade-right" distance={40}>
             <SectionEyebrow label={homeContent.receipts.eyebrow} color="ink" />
-            <h2 className="font-display text-6xl sm:text-8xl uppercase tracking-tight leading-[0.88] mt-4 mb-6">
+            <h2 className="font-display text-[clamp(34px,4.2vw,58px)] 3xl:text-8xl uppercase tracking-tight leading-[0.9] 3xl:leading-[0.88] mt-3 3xl:mt-4 mb-4 3xl:mb-6">
               <MaskedText text={homeContent.receipts.heading} splitBy="lines" trigger="scroll" />
             </h2>
-            <p className="font-sans text-lg sm:text-xl text-ink/90 leading-relaxed mb-10 max-w-xl">
+            <p className="font-sans text-sm sm:text-base 3xl:text-xl text-ink/90 leading-relaxed mb-7 3xl:mb-10 max-w-lg 3xl:max-w-xl">
               {homeContent.receipts.subheading}
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 font-mono border-t-2 border-ink pt-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 3xl:gap-8 font-mono border-t-2 border-ink pt-6 3xl:pt-8">
               {homeContent.receipts.kpis.map((kpi, idx) => (
                 <div key={idx}>
-                  <span className="text-xs uppercase tracking-wider opacity-75 block mb-1">
+                  <span className="text-[11px] 3xl:text-xs uppercase tracking-wider opacity-75 block mb-0.5 3xl:mb-1">
                     {kpi.term}
                   </span>
-                  <span className="font-display text-4xl sm:text-5xl uppercase tracking-tight">
+                  <span className="font-display text-2xl sm:text-3xl lg:text-4xl 3xl:text-5xl uppercase tracking-tight">
                     {kpi.definition}
                   </span>
                 </div>
@@ -602,7 +606,7 @@ export const HomePage: React.FC = () => {
       {/* =====================================================================
           05 CONTACT BRIEF SECTION (Expansive Out-of-Container Form)
           ===================================================================== */}
-      <section id="contact" className="relative bg-ink text-paper px-[var(--gutter)] py-28 overflow-hidden w-full">
+      <section id="contact" className="relative z-20 bg-ink text-paper px-[var(--gutter)] py-20 3xl:py-28 overflow-hidden w-full">
         {/* Floating Scroll-In Shape from TOP */}
         <div className="flex justify-center -mt-10 mb-8 relative z-20">
           <ScrollInShape
@@ -653,21 +657,21 @@ export const HomePage: React.FC = () => {
           </ScrollInShape>
         </div>
 
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-start relative z-20">
-          <ScrollReveal variant="fade-right" distance={40} className="lg:col-span-5 flex flex-col gap-6">
+        <div className="max-w-6xl mx-auto 3xl:max-w-none w-full grid grid-cols-1 lg:grid-cols-12 gap-10 3xl:gap-12 items-start relative z-20">
+          <ScrollReveal variant="fade-right" distance={40} className="lg:col-span-5 flex flex-col gap-4 3xl:gap-6">
             <SectionEyebrow label={homeContent.contact.eyebrow} color="lime" />
-            <h2 className="font-display text-6xl sm:text-8xl uppercase tracking-tight leading-[0.88] text-paper">
+            <h2 className="font-display text-[clamp(34px,4.2vw,58px)] 3xl:text-8xl uppercase tracking-tight leading-[0.9] 3xl:leading-[0.88] text-paper">
               <MaskedText text={homeContent.contact.heading} splitBy="lines" trigger="scroll" />
             </h2>
-            <p className="font-sans text-base sm:text-xl text-paper/75 leading-relaxed">
+            <p className="font-sans text-sm sm:text-base 3xl:text-xl text-paper/75 leading-relaxed">
               {homeContent.contact.subheading}
             </p>
 
-            <div className="p-6 bg-ink-2 border-2 border-paper/20 rounded-2xl flex flex-col gap-2 mt-4">
-              <span className="font-mono text-xs uppercase tracking-widest text-lime font-bold">
+            <div className="p-5 3xl:p-6 bg-ink-2 border-2 border-paper/20 rounded-2xl flex flex-col gap-1.5 3xl:gap-2 mt-2 3xl:mt-4">
+              <span className="font-mono text-[11px] 3xl:text-xs uppercase tracking-widest text-lime font-bold">
                 WHAT HAPPENS NEXT
               </span>
-              <p className="font-sans text-sm text-paper/80 leading-relaxed">
+              <p className="font-sans text-xs sm:text-sm text-paper/80 leading-relaxed">
                 We review your current blended CAC, crawl your ad library, and send you a loom teardown within 24 hours. Zero sales decks.
               </p>
             </div>
@@ -679,7 +683,7 @@ export const HomePage: React.FC = () => {
                 e.preventDefault();
                 alert("Teardown request submitted! We will review your ad account within 24 hours.");
               }}
-              className="flex flex-col gap-6 p-8 sm:p-12 bg-ink-2 border-2 border-paper/20 rounded-3xl shadow-brutal-xl"
+              className="flex flex-col gap-5 3xl:gap-6 p-6 sm:p-8 3xl:p-12 bg-ink-2 border-2 border-paper/20 rounded-3xl shadow-brutal-xl"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
@@ -758,8 +762,8 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Thick Highway Road Line Winding Through Sections with Emerging Particles */}
-      <BackgroundRoadLine containerRef={pageRef} roadWidth={128} className="z-[10]" />
+      {/* Proportional Highway Road Line Winding Cleanly Behind Sections */}
+      <BackgroundRoadLine containerRef={pageRef} roadWidth={128} className="z-10" />
     </div>
   );
 };

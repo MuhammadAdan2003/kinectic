@@ -19,6 +19,9 @@
   --font-serif: "Instrument Serif", Georgia, serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
   --font-hand: "Caveat", "Comic Sans MS", cursive;
+
+  /* Full-HD / 1920px Studio Poster Breakpoint (1680px+) */
+  --breakpoint-3xl: 105rem;
 }
 
 /* ==========================================================================

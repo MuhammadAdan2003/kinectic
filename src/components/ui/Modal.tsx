@@ -43,7 +43,7 @@ export const Modal: React.FC<ModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-150 flex items-center justify-center p-4 sm:p-6"
     >
       {/* Backdrop */}
       <div

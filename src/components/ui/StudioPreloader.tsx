@@ -94,7 +94,7 @@ export const StudioPreloader: React.FC = () => {
       ref={containerRef}
       aria-live="polite"
       aria-label="Loading studio experience"
-      className="fixed inset-0 w-screen h-screen z-[9999] pointer-events-none flex flex-col overflow-hidden select-none bg-transparent"
+      className="fixed inset-0 w-screen h-screen z-9999 pointer-events-none flex flex-col overflow-hidden select-none bg-transparent"
     >
       {/* =====================================================================
           TOP HALF (0% to 50% Height, slides UP on exit)

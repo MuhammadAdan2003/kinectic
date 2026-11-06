@@ -51,38 +51,38 @@ export const GrowthLabPage: React.FC = () => {
       />
 
       {/* 02 Interactive ROAS & Leakage Simulator */}
-      <section className="relative bg-ink text-paper px-[var(--gutter)] py-20 md:py-28 border-b-2 border-ink w-full">
-        <div className="max-w-6xl mx-auto flex flex-col gap-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-paper/20">
+      <section className="relative bg-ink text-paper px-[var(--gutter)] py-14 md:py-20 3xl:py-28 border-b-2 border-ink w-full">
+        <div className="max-w-6xl mx-auto 3xl:max-w-7xl flex flex-col gap-9 3xl:gap-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 3xl:gap-6 pb-5 3xl:pb-6 border-b border-paper/20">
             <div>
               <SectionEyebrow label="Live Financial Modeling" color="lime" />
-              <h2 className="font-display text-4xl sm:text-6xl uppercase tracking-tight leading-[0.92] mt-3">
+              <h2 className="font-display text-[clamp(28px,3.6vw,48px)] 3xl:text-6xl uppercase tracking-tight leading-[0.94] 3xl:leading-[0.92] mt-2 3xl:mt-3">
                 <MaskedText text={growthLabContent.calculatorTitle} splitBy="lines" trigger="scroll" />
               </h2>
             </div>
-            <p className="font-sans text-sm sm:text-base text-paper/70 max-w-sm leading-relaxed">
+            <p className="font-sans text-xs sm:text-sm text-paper/70 max-w-sm leading-relaxed">
               {growthLabContent.calculatorDescription}
             </p>
           </div>
 
           {/* Interactive Calculator Workspace Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 3xl:gap-8 items-start">
             {/* Left Controls Column (5 cols) */}
-            <div className="lg:col-span-5 p-6 sm:p-8 bg-ink-2 border-2 border-paper/20 rounded-3xl flex flex-col gap-8 shadow-brutal-xl">
+            <div className="lg:col-span-5 p-5 sm:p-6 3xl:p-8 bg-ink-2 border-2 border-paper/20 rounded-2xl flex flex-col gap-6 3xl:gap-8 shadow-brutal-xl">
               <div>
-                <span className="font-mono text-xs uppercase text-lime font-bold tracking-widest block mb-2">
+                <span className="font-mono text-[11px] uppercase text-lime font-bold tracking-widest block mb-1.5 3xl:mb-2">
                   INPUT PARAMETERS
                 </span>
-                <h3 className="font-display text-2xl uppercase tracking-tight text-paper">
+                <h3 className="font-display text-xl 3xl:text-2xl uppercase tracking-tight text-paper">
                   Adjust Your Monthly Variables
                 </h3>
               </div>
 
               {/* Monthly Ad Spend Slider */}
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2.5 3xl:gap-3">
                 <div className="flex items-center justify-between font-mono text-xs">
                   <label htmlFor={spendSliderId} className="text-paper/80 uppercase font-semibold">Monthly Ad Spend</label>
-                  <span className="font-display text-2xl text-lime font-black">
+                  <span className="font-display text-xl 3xl:text-2xl text-lime font-black">
                     {formatCurrency(monthlySpend)}
                   </span>
                 </div>
@@ -95,7 +95,7 @@ export const GrowthLabPage: React.FC = () => {
                   step={5000}
                   value={monthlySpend}
                   onChange={(e) => setMonthlySpend(Number(e.target.value))}
-                  className="w-full h-2.5 bg-ink rounded-lg appearance-none cursor-pointer accent-lime"
+                  className="w-full h-2 3xl:h-2.5 bg-ink rounded-lg appearance-none cursor-pointer accent-lime"
                 />
                 <div className="flex justify-between font-mono text-[10px] text-paper/50">
                   <span>$10,000</span>
@@ -105,10 +105,10 @@ export const GrowthLabPage: React.FC = () => {
               </div>
 
               {/* Current Blended ROAS Slider */}
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2.5 3xl:gap-3">
                 <div className="flex items-center justify-between font-mono text-xs">
                   <label htmlFor={roasSliderId} className="text-paper/80 uppercase font-semibold">Current Blended ROAS</label>
-                  <span className="font-display text-2xl text-sun font-black">
+                  <span className="font-display text-xl 3xl:text-2xl text-sun font-black">
                     {currentRoas.toFixed(1)}x
                   </span>
                 </div>
@@ -121,7 +121,7 @@ export const GrowthLabPage: React.FC = () => {
                   step={0.1}
                   value={currentRoas}
                   onChange={(e) => setCurrentRoas(Number(e.target.value))}
-                  className="w-full h-2.5 bg-ink rounded-lg appearance-none cursor-pointer accent-sun"
+                  className="w-full h-2 3xl:h-2.5 bg-ink rounded-lg appearance-none cursor-pointer accent-sun"
                 />
                 <div className="flex justify-between font-mono text-[10px] text-paper/50">
                   <span>1.0x (Break Even)</span>
@@ -131,10 +131,10 @@ export const GrowthLabPage: React.FC = () => {
               </div>
 
               {/* Dynamic Warning Stamp */}
-              <div className="p-4 bg-tomato/20 border-2 border-tomato rounded-2xl flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-tomato shrink-0 mt-0.5" />
-                <div className="font-mono text-xs text-paper/90 leading-relaxed">
-                  <span className="font-bold text-tomato block mb-1 uppercase">
+              <div className="p-3.5 3xl:p-4 bg-tomato/20 border-2 border-tomato rounded-xl flex items-start gap-2.5 3xl:gap-3">
+                <AlertTriangle className="w-4 h-4 3xl:w-5 3xl:h-5 text-tomato shrink-0 mt-0.5" />
+                <div className="font-mono text-[11px] 3xl:text-xs text-paper/90 leading-relaxed">
+                  <span className="font-bold text-tomato block mb-0.5 uppercase">
                     SILENT LEAKAGE DETECTED
                   </span>
                   At {currentRoas.toFixed(1)}x ROAS, an estimated{" "}
@@ -145,28 +145,28 @@ export const GrowthLabPage: React.FC = () => {
             </div>
 
             {/* Right Live Simulation Output Column (7 cols) */}
-            <div className="lg:col-span-7 flex flex-col gap-6">
+            <div className="lg:col-span-7 flex flex-col gap-5 3xl:gap-6">
               {/* Top Row: Gauge & Main Output Card */}
-              <div className="p-6 sm:p-8 bg-paper text-ink border-2 border-ink rounded-3xl shadow-brutal-xl flex flex-col sm:flex-row items-center justify-between gap-8">
-                <div className="flex flex-col gap-2">
-                  <span className="font-mono text-xs uppercase font-bold text-ink/60 tracking-wider">
+              <div className="p-5 sm:p-6 3xl:p-8 bg-paper text-ink border-2 border-ink rounded-2xl shadow-brutal-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="flex flex-col gap-1.5 3xl:gap-2">
+                  <span className="font-mono text-[11px] uppercase font-bold text-ink/60 tracking-wider">
                     TARGET KINETIC BLENDED ROAS
                   </span>
                   <div className="flex items-baseline gap-2">
-                    <span className="font-display text-6xl sm:text-7xl font-black text-ink tracking-tight">
+                    <span className="font-display text-4xl sm:text-5xl 3xl:text-7xl font-black text-ink tracking-tight">
                       {targetRoas.toFixed(1)}x
                     </span>
-                    <span className="font-mono text-xs font-bold text-forest bg-lime px-2 py-0.5 rounded-full border border-ink">
+                    <span className="font-mono text-[11px] 3xl:text-xs font-bold text-forest bg-lime px-2 3xl:px-2.5 py-0.5 rounded-full border border-ink">
                       +{((targetRoas / currentRoas - 1) * 100).toFixed(0)}% LIFT
                     </span>
                   </div>
-                  <p className="font-sans text-xs text-ink/70 max-w-xs mt-1">
+                  <p className="font-sans text-xs text-ink/70 max-w-xs mt-0.5 3xl:mt-1">
                     Modeled with first-party CAPI deduplication and 48-hour creator sprint velocity.
                   </p>
                 </div>
 
                 {/* SVG Velocity Gauge Needle */}
-                <div className="relative w-44 h-24 shrink-0 flex items-center justify-center">
+                <div className="relative w-36 h-20 3xl:w-44 3xl:h-24 shrink-0 flex items-center justify-center">
                   <svg viewBox="0 0 160 90" className="w-full h-full overflow-visible">
                     {/* Gauge Arc Zones */}
                     <path
@@ -205,11 +205,11 @@ export const GrowthLabPage: React.FC = () => {
               {/* Bottom 3 Metric Pills */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {/* Metric 1 */}
-                <div className="p-5 bg-ink-2 border-2 border-paper/20 rounded-2xl flex flex-col gap-1">
+                <div className="p-4 3xl:p-5 bg-ink-2 border-2 border-paper/20 rounded-xl flex flex-col gap-1">
                   <span className="font-mono text-[10px] uppercase font-bold text-paper/60">
                     PROJECTED MONTHLY REVENUE
                   </span>
-                  <span className="font-display text-2xl sm:text-3xl font-black text-lime">
+                  <span className="font-display text-xl sm:text-2xl 3xl:text-3xl font-black text-lime">
                     {formatCurrency(kineticRevenue)}
                   </span>
                   <span className="font-mono text-[10px] text-paper/40">
@@ -218,11 +218,11 @@ export const GrowthLabPage: React.FC = () => {
                 </div>
 
                 {/* Metric 2 */}
-                <div className="p-5 bg-ink-2 border-2 border-paper/20 rounded-2xl flex flex-col gap-1">
+                <div className="p-4 3xl:p-5 bg-ink-2 border-2 border-paper/20 rounded-xl flex flex-col gap-1">
                   <span className="font-mono text-[10px] uppercase font-bold text-tomato">
                     ESTIMATED MONTHLY LEAK
                   </span>
-                  <span className="font-display text-2xl sm:text-3xl font-black text-tomato">
+                  <span className="font-display text-xl sm:text-2xl 3xl:text-3xl font-black text-tomato">
                     {formatCurrency(monthlyLeaked)}
                   </span>
                   <span className="font-mono text-[10px] text-paper/40">
@@ -231,11 +231,11 @@ export const GrowthLabPage: React.FC = () => {
                 </div>
 
                 {/* Metric 3 */}
-                <div className="p-5 bg-ink-2 border-2 border-paper/20 rounded-2xl flex flex-col gap-1">
+                <div className="p-4 3xl:p-5 bg-ink-2 border-2 border-paper/20 rounded-xl flex flex-col gap-1">
                   <span className="font-mono text-[10px] uppercase font-bold text-sun">
                     CREATIVE VELOCITY NEEDED
                   </span>
-                  <span className="font-display text-2xl sm:text-3xl font-black text-sun">
+                  <span className="font-display text-xl sm:text-2xl 3xl:text-3xl font-black text-sun">
                     {recommendedSprints}+ HOOKS
                   </span>
                   <span className="font-mono text-[10px] text-paper/40">
@@ -245,15 +245,15 @@ export const GrowthLabPage: React.FC = () => {
               </div>
 
               {/* Net Expansion Callout */}
-              <div className="p-5 bg-lime text-forest border-2 border-ink rounded-2xl shadow-brutal flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="p-4 sm:p-5 3xl:p-6 bg-lime text-forest border-2 border-ink rounded-2xl shadow-brutal flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <Sparkles className="w-6 h-6 text-forest shrink-0" />
+                  <Sparkles className="w-5 h-5 3xl:w-6 3xl:h-6 text-forest shrink-0" />
                   <div>
-                    <span className="font-mono text-[10px] uppercase font-bold tracking-wider block text-forest/80">
+                    <span className="font-mono text-[10px] 3xl:text-xs uppercase font-bold tracking-wider block text-forest/80">
                       NET COMPOUNDING GAIN AT SCALE
                     </span>
-                    <span className="font-display text-3xl sm:text-4xl uppercase tracking-tight text-forest font-black">
-                      +{formatCurrency(monthlyNetGain)} / MONTH
+                    <span className="font-display text-2xl sm:text-3xl 3xl:text-4xl uppercase tracking-tight text-forest font-black">
+                      +{formatCurrency(monthlyNetGain)} MONTHLY
                     </span>
                   </div>
                 </div>
@@ -261,7 +261,7 @@ export const GrowthLabPage: React.FC = () => {
                 <TransitionLink
                   to="/"
                   transitionTitle="REQUEST AUDIT"
-                  className="px-6 py-3 bg-paper text-ink border-2 border-ink rounded-full font-mono text-xs font-bold uppercase tracking-wider shadow-xs hover:-translate-y-0.5 active:scale-95 transition-transform"
+                  className="px-5 3xl:px-6 py-2.5 3xl:py-3 bg-paper text-ink border-2 border-ink rounded-full font-mono text-xs font-bold uppercase tracking-wider shadow-xs hover:-translate-y-0.5 active:scale-95 transition-transform"
                 >
                   Capture This Gain →
                 </TransitionLink>
@@ -272,22 +272,22 @@ export const GrowthLabPage: React.FC = () => {
       </section>
 
       {/* 03 Modular Engagement Tiers */}
-      <section className="paper-tex relative bg-paper text-ink px-[var(--gutter)] py-20 md:py-28 border-b-2 border-ink w-full">
-        <div className="max-w-6xl mx-auto flex flex-col gap-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b-2 border-ink">
+      <section className="paper-tex relative bg-paper text-ink px-[var(--gutter)] py-14 md:py-20 3xl:py-28 border-b-2 border-ink w-full">
+        <div className="max-w-6xl mx-auto 3xl:max-w-7xl flex flex-col gap-9 3xl:gap-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 3xl:gap-6 pb-5 3xl:pb-6 border-b-2 border-ink">
             <div>
               <SectionEyebrow label="Sprint Frameworks" color="ink" />
-              <h2 className="font-display text-4xl sm:text-6xl uppercase tracking-tight leading-[0.92] mt-3">
+              <h2 className="font-display text-[clamp(28px,3.6vw,48px)] 3xl:text-6xl uppercase tracking-tight leading-[0.94] 3xl:leading-[0.92] mt-2 3xl:mt-3">
                 <MaskedText text={growthLabContent.sprintsHeading} splitBy="lines" trigger="scroll" />
               </h2>
             </div>
-            <p className="font-sans text-base text-ink/75 max-w-sm leading-relaxed">
+            <p className="font-sans text-sm sm:text-base text-ink/75 max-w-sm leading-relaxed">
               {growthLabContent.sprintsSubheading}
             </p>
           </div>
 
           {/* Tier Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {growthLabContent.tiers.map((tier) => {
               const badgeFill =
                 tier.color === "lime"
@@ -300,23 +300,23 @@ export const GrowthLabPage: React.FC = () => {
                 <ScrollReveal
                   key={tier.number}
                   variant="fade-up"
-                  distance={30}
-                  className="p-8 bg-paper-2 border-2 border-ink rounded-3xl shadow-brutal flex flex-col justify-between"
+                  distance={24}
+                  className="p-6 3xl:p-8 bg-paper-2 border-2 border-ink rounded-2xl shadow-brutal flex flex-col justify-between"
                 >
-                  <div className="flex flex-col gap-5">
-                    <div className="flex items-center justify-between pb-3 border-b border-ink/20">
-                      <span className="font-display text-3xl font-black text-ink">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between pb-2.5 3xl:pb-3 border-b border-ink/20">
+                      <span className="font-display text-2xl 3xl:text-3xl font-black text-ink">
                         {tier.number}
                       </span>
                       <span
-                        className={`px-3 py-0.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider border border-ink ${badgeFill}`}
+                        className={`px-2.5 3xl:px-3 py-0.5 3xl:py-1 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider border border-ink ${badgeFill}`}
                       >
                         {tier.cadence}
                       </span>
                     </div>
 
                     <div>
-                      <h3 className="font-display text-2xl uppercase tracking-tight leading-snug">
+                      <h3 className="font-display text-xl 3xl:text-2xl uppercase tracking-tight leading-snug">
                         {tier.name}
                       </h3>
                       <p className="font-sans text-xs text-ink/75 mt-1 leading-relaxed">
@@ -332,7 +332,7 @@ export const GrowthLabPage: React.FC = () => {
                     </div>
 
                     {/* Deliverables List */}
-                    <div className="flex flex-col gap-2 pt-2">
+                    <div className="flex flex-col gap-1.5 3xl:gap-2 pt-1 3xl:pt-2">
                       <span className="font-mono text-[10px] uppercase font-bold tracking-wider text-ink/60">
                         WHAT SHIPS
                       </span>
@@ -345,14 +345,14 @@ export const GrowthLabPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-4 border-t border-ink/20 flex flex-col gap-3 font-mono text-xs">
+                  <div className="mt-6 3xl:mt-8 pt-3.5 3xl:pt-4 border-t border-ink/20 flex flex-col gap-2.5 3xl:gap-3 font-mono text-xs">
                     <span className="text-[10px] text-ink/60 uppercase font-bold">
                       {tier.commitment}
                     </span>
                     <TransitionLink
                       to="/"
                       transitionTitle="BOOK SPRINT"
-                      className="w-full py-3 bg-ink text-paper border-2 border-ink rounded-xl font-bold uppercase tracking-wider text-center shadow-xs hover:bg-forest hover:text-lime active:scale-95 transition-all"
+                      className="w-full py-2.5 3xl:py-3 bg-ink text-paper border-2 border-ink rounded-xl font-bold uppercase tracking-wider text-center shadow-xs hover:bg-forest hover:text-lime active:scale-95 transition-all"
                     >
                       Lock In This Sprint →
                     </TransitionLink>
@@ -365,21 +365,21 @@ export const GrowthLabPage: React.FC = () => {
       </section>
 
       {/* 04 Bottom Banner */}
-      <section className="paper-tex relative bg-tomato text-ink px-[var(--gutter)] py-20 border-b-2 border-ink w-full">
-        <div className="max-w-4xl mx-auto text-center flex flex-col items-center gap-6">
+      <section className="paper-tex relative bg-tomato text-ink px-[var(--gutter)] py-14 md:py-20 3xl:py-24 border-b-2 border-ink w-full">
+        <div className="max-w-3xl 3xl:max-w-4xl mx-auto text-center flex flex-col items-center gap-4 3xl:gap-6">
           <SectionEyebrow label="No More Fluff" color="ink" />
-          <h2 className="font-display text-4xl sm:text-6xl md:text-7xl uppercase tracking-tight leading-[0.9]">
+          <h2 className="font-display text-[clamp(28px,3.8vw,50px)] 3xl:text-7xl uppercase tracking-tight leading-[0.94] 3xl:leading-[0.9]">
             STOP GUESSING. START COMPOUNDING.
           </h2>
-          <p className="font-sans text-base sm:text-lg text-ink/90 max-w-xl leading-relaxed">
+          <p className="font-sans text-sm sm:text-base 3xl:text-lg text-ink/90 max-w-xl leading-relaxed">
             Every 30 days you wait, your competitors are deploying server-side CAPI and shipping 40+ fresh hooks. Let our operators audit your account today.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-2">
+          <div className="flex flex-wrap items-center justify-center gap-3.5 3xl:gap-4 mt-2">
             <TransitionLink
               to="/"
               transitionTitle="HOME"
-              className="px-8 py-4 bg-paper text-ink border-2 border-ink rounded-full font-sans text-sm font-bold uppercase tracking-tight shadow-brutal hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all flex items-center gap-2"
+              className="px-6 3xl:px-8 py-3 3xl:py-4 bg-paper text-ink border-2 border-ink rounded-full font-sans text-xs sm:text-sm font-bold uppercase tracking-tight shadow-brutal hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all flex items-center gap-2"
             >
               <span>Back to Home</span>
               <ArrowRight className="w-4 h-4" />
@@ -388,7 +388,7 @@ export const GrowthLabPage: React.FC = () => {
             <TransitionLink
               to="/manifesto"
               transitionTitle="MANIFESTO"
-              className="px-8 py-4 bg-ink text-paper border-2 border-ink rounded-full font-sans text-sm font-bold uppercase tracking-tight shadow-brutal hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all flex items-center gap-2"
+              className="px-6 3xl:px-8 py-3 3xl:py-4 bg-ink text-paper border-2 border-ink rounded-full font-sans text-xs sm:text-sm font-bold uppercase tracking-tight shadow-brutal hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all flex items-center gap-2"
             >
               <span>Read Studio Manifesto</span>
               <ArrowRight className="w-4 h-4" />

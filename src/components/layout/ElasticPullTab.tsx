@@ -215,7 +215,7 @@ export const ElasticPullTab: React.FC<ElasticPullTabProps> = ({
     <div
       ref={containerRef}
       className={cn(
-        "fixed top-0 z-[125] select-none flex flex-col items-center pointer-events-none",
+        "fixed top-0 z-125 select-none flex flex-col items-center pointer-events-none",
         className
       )}
     >

@@ -14,12 +14,13 @@ export function initLenis(): Lenis | null {
   if (lenisInstance) return lenisInstance;
 
   lenisInstance = new Lenis({
-    duration: 1.2,
+    duration: 1.0,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     orientation: "vertical",
     gestureOrientation: "vertical",
     smoothWheel: true,
-    touchMultiplier: 1.8,
+    wheelMultiplier: 0.95,
+    touchMultiplier: 1.6,
   });
 
   // Synchronize Lenis scroll updates with GSAP ScrollTrigger

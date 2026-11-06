@@ -56,7 +56,7 @@ export const ScrollGrowthChartSvg: React.FC<ScrollGrowthChartSvgProps> = ({ clas
           trigger: containerRef.current,
           start: "top 95%",
           end: "bottom 80%",
-          scrub: 0.5,
+          scrub: true,
           invalidateOnRefresh: true,
         },
       });

@@ -109,7 +109,7 @@ export const ThermalShutterOverlay: React.FC = () => {
     <div
       ref={overlayRef}
       aria-hidden="true"
-      className="fixed inset-0 z-[200] pointer-events-none overflow-hidden hidden"
+      className="fixed inset-0 z-200 pointer-events-none overflow-hidden hidden"
     >
       {/* 5 Vertical Thermal Paper Columns */}
       <div className="absolute inset-0 flex w-full h-full">

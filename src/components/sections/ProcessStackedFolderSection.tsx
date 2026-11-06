@@ -11,9 +11,8 @@ interface StepConfig {
   cursiveSubtitle: string;
   description: string;
   pills: string[];
-  outlineColor: string; // e.g. '#ff4f1f'
-  accentHex: string;
-  restingRotation: number; // degrees of organic paper stack tilt
+  accentToken: string;
+  restingRotation: number;
 }
 
 const stepsData: StepConfig[] = [
@@ -25,9 +24,8 @@ const stepsData: StepConfig[] = [
     description:
       "We crawl through your ad accounts, funnel and competitors' ads until we find exactly where the money is leaking.",
     pills: ["Account audit", "Competitor teardown", "Funnel map"],
-    outlineColor: "#ff4f1f", // tomato
-    accentHex: "#ff4f1f",
-    restingRotation: -1.2, // tilts left
+    accentToken: "var(--tomato)",
+    restingRotation: -0.9,
   },
   {
     stepIndex: "02",
@@ -37,9 +35,8 @@ const stepsData: StepConfig[] = [
     description:
       "Channel mix, budget split, audiences and offers. One plan, zero fluff, written in plain English.",
     pills: ["Media plan", "Offer design", "KPIs that matter"],
-    outlineColor: "#2e3bff", // blue
-    accentHex: "#2e3bff",
-    restingRotation: 1.5, // tilts right
+    accentToken: "var(--blue)",
+    restingRotation: 1.0,
   },
   {
     stepIndex: "03",
@@ -49,9 +46,8 @@ const stepsData: StepConfig[] = [
     description:
       "Hooks, statics, UGC, reels and search copy. Dozens of variants, each one with a job to do.",
     pills: ["Hooks", "UGC", "Statics", "Search copy"],
-    outlineColor: "#ff8fcf", // pink
-    accentHex: "#ff8fcf",
-    restingRotation: -1.4, // tilts left
+    accentToken: "var(--pink)",
+    restingRotation: -1.0,
   },
   {
     stepIndex: "04",
@@ -61,9 +57,8 @@ const stepsData: StepConfig[] = [
     description:
       "Clean account structure, airtight tracking, CAPI and naming conventions. The boring bits, done right.",
     pills: ["Account build", "Tracking QA", "Launch checklist"],
-    outlineColor: "#ffc22e", // sun
-    accentHex: "#ffc22e",
-    restingRotation: 1.3, // tilts right
+    accentToken: "var(--sun)",
+    restingRotation: 0.9,
   },
   {
     stepIndex: "05",
@@ -73,9 +68,8 @@ const stepsData: StepConfig[] = [
     description:
       "Weekly testing sprints. Kill losers fast, feed winners hard, and report it all like a human.",
     pills: ["Test sprints", "Budget scaling", "Weekly notes"],
-    outlineColor: "#c8f53c", // lime
-    accentHex: "#c8f53c",
-    restingRotation: -1.0, // tilts left
+    accentToken: "var(--lime)",
+    restingRotation: -0.7,
   },
 ];
 
@@ -83,7 +77,6 @@ export const ProcessStackedFolderSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  // Initialize Draggable on Card 02 sticky notes and organic tilt scrub on cards
   useGSAP(
     () => {
       // 1. Draggable on Card 02 sticky notes
@@ -103,64 +96,35 @@ export const ProcessStackedFolderSection: React.FC = () => {
         });
       }
 
-      // 2. Smooth stacking deck compression & tactile hover interactions
+      // 2. 1:1 Lockstep Stacking Deck Compression (Zero hover-vs-scroll tween conflicts, scrub: true)
       const cardEls = containerRef.current?.querySelectorAll<HTMLElement>(".p-card");
-      const cleanups: Array<() => void> = [];
 
-      if (cardEls && cardEls.length > 0) {
+      if (cardEls && cardEls.length > 0 && !prefersReducedMotion) {
         cardEls.forEach((card, idx) => {
           const inner = card.querySelector<HTMLElement>(".p-inner");
           if (!inner) return;
 
           const restingRot = stepsData[idx].restingRotation;
+          gsap.set(inner, {
+            rotate: restingRot,
+            transformOrigin: "center top",
+            force3D: true,
+          });
 
-          if (!prefersReducedMotion) {
-            // Set resting rotation cleanly through GSAP
-            gsap.set(inner, { rotate: restingRot, transformOrigin: "center center" });
-
-            // Smooth deck compression: as the next card stacks over this one,
-            // this card smoothly scales down to 0.95 with silky scroll lockstep
-            if (idx < cardEls.length - 1) {
-              const nextCard = cardEls[idx + 1];
-              gsap.to(inner, {
-                scale: 0.95,
-                rotate: restingRot * 0.7,
-                ease: "power1.out",
-                scrollTrigger: {
-                  trigger: nextCard,
-                  start: "top 80%",
-                  end: "top 30%",
-                  scrub: 0.6,
-                },
-              });
-            }
-
-            // Tactile Hover: Lifts -8px and straightens cleanly without fighting ScrollTrigger scale
-            const onEnter = () => {
-              gsap.to(inner, {
-                y: -8,
-                rotate: 0,
-                duration: 0.32,
-                ease: "power2.out",
-                overwrite: "auto",
-              });
-            };
-            const onLeave = () => {
-              gsap.to(inner, {
-                y: 0,
-                rotate: restingRot,
-                duration: 0.38,
-                ease: "power2.out",
-                overwrite: "auto",
-              });
-            };
-
-            card.addEventListener("mouseenter", onEnter);
-            card.addEventListener("mouseleave", onLeave);
-
-            cleanups.push(() => {
-              card.removeEventListener("mouseenter", onEnter);
-              card.removeEventListener("mouseleave", onLeave);
+          if (idx < cardEls.length - 1) {
+            const nextCard = cardEls[idx + 1];
+            gsap.to(inner, {
+              scale: 0.96,
+              rotate: restingRot * 0.65,
+              ease: "none",
+              force3D: true,
+              scrollTrigger: {
+                trigger: nextCard,
+                start: "top 85%",
+                end: "top 22%",
+                scrub: true,
+                invalidateOnRefresh: true,
+              },
             });
           }
         });
@@ -168,41 +132,40 @@ export const ProcessStackedFolderSection: React.FC = () => {
 
       return () => {
         draggables.forEach((d) => d.kill());
-        cleanups.forEach((fn) => fn());
       };
     },
-    { scope: containerRef }
+    { scope: containerRef, dependencies: [prefersReducedMotion] }
   );
 
   return (
     <section
       id="process"
       ref={containerRef}
-      className="paper-tex relative z-20 bg-paper text-ink px-[var(--gutter)] py-20 sm:py-28 md:py-36 border-b-2 border-ink overflow-visible w-full select-none"
+      className="paper-tex relative z-20 bg-paper text-ink px-[var(--gutter)] py-16 sm:py-20 lg:py-24 3xl:py-36 border-b-2 border-ink overflow-visible w-full select-none"
     >
-      <div className="w-full flex flex-col relative z-20">
+      <div className="max-w-6xl mx-auto 3xl:max-w-none w-full flex flex-col relative z-20">
         {/* Section Header */}
-        <div className="grid gap-8 lg:grid-cols-12 lg:items-end pb-12 sm:pb-16 border-b-2 border-ink/20">
+        <div className="grid gap-6 3xl:gap-8 lg:grid-cols-12 lg:items-end pb-8 sm:pb-10 3xl:pb-16 border-b-2 border-ink/20">
           <div className="lg:col-span-8">
             <SectionEyebrow index="03" label="How We Work" color="ink" />
-            <h2 className="mt-4 font-display text-[clamp(54px,8vw,140px)] uppercase tracking-tight leading-[0.85] text-ink">
+            <h2 className="mt-3 3xl:mt-4 font-display text-[clamp(34px,4.2vw,62px)] 3xl:text-[140px] uppercase tracking-tight leading-[0.88] 3xl:leading-[0.85] text-ink">
               <span>HOW WE </span>
               <span className="font-serif italic font-normal text-tomato block sm:inline">
                 MAKE NOISE.
               </span>
             </h2>
           </div>
-          <p className="max-w-[420px] font-sans text-base sm:text-lg md:text-xl text-ink/80 leading-relaxed lg:col-span-4 lg:justify-self-end">
+          <p className="max-w-[380px] 3xl:max-w-[420px] font-sans text-sm sm:text-base 3xl:text-xl text-ink/80 leading-relaxed lg:col-span-4 lg:justify-self-end">
             Five steps, no mystery. You'll always know what we're doing, why we're doing it, and what it's costing you.
           </p>
         </div>
 
         {/* =====================================================================
-            STACKED CARDS DECK (Exact Mechay Architecture with 14px Inset Color Outlines)
+            STACKED CARDS DECK (Compact on 1200-1400, Full Monumental on 1920+)
             ===================================================================== */}
-        <div className="mt-16 md:mt-24 pb-32">
+        <div className="mt-10 md:mt-14 3xl:mt-24 pb-16 3xl:pb-32 [--stack-base:78px] [--stack-step:16px] 3xl:[--stack-base:90px] 3xl:[--stack-step:22px]">
           {stepsData.map((step, idx) => {
-            const stickyTopOffset = `calc(90px + ${idx * 22}px)`;
+            const stickyTopOffset = `calc(var(--stack-base) + var(--stack-step) * ${idx})`;
 
             return (
               <div
@@ -211,54 +174,50 @@ export const ProcessStackedFolderSection: React.FC = () => {
                   top: stickyTopOffset,
                   zIndex: 10 + idx,
                 }}
-                className="p-card relative mb-8 md:sticky md:mb-[16vh]"
+                className="p-card relative mb-6 md:sticky md:mb-[11vh] 3xl:mb-[16vh]"
               >
-                {/* Main 50/50 Card with 14px colored inset outline inside 3px black border & organic tilt */}
                 <div
-                  className="p-inner relative grid origin-center overflow-hidden rounded-[28px] sm:rounded-[36px] will-change-transform border-[3px] border-ink bg-paper shadow-[0_24px_60px_-28px_rgba(18,17,16,0.55)] md:min-h-[66vh] md:grid-cols-2 cursor-pointer hover:shadow-[0_32px_70px_-20px_rgba(18,17,16,0.7)]"
+                  className="p-inner relative grid origin-top overflow-hidden rounded-[24px] sm:rounded-[28px] 3xl:rounded-[36px] will-change-transform border-[2.5px] 3xl:border-[3px] border-ink bg-paper md:min-h-[380px] lg:min-h-[410px] 3xl:min-h-[66vh] md:grid-cols-2 backface-hidden [--card-outline:10px] [--card-offset:-12.5px] 3xl:[--card-outline:14px] 3xl:[--card-offset:-17px]"
                   style={{
-                    outline: `${step.outlineColor} solid 14px`,
-                    outlineOffset: "-17px",
-                    transform: `rotate(${step.restingRotation}deg)`,
-                    transformOrigin: "center center",
+                    outline: `${step.accentToken} solid var(--card-outline)`,
+                    outlineOffset: "var(--card-offset)",
+                    boxShadow: "0 14px 32px -16px rgba(18,17,16,0.45)",
                   }}
                 >
-                  {/* LEFT HALF (Paper Surface: Outline Number, Step Title, Cursive Subtitle, Description, Pills) */}
-                  <div className="flex flex-col justify-between gap-8 p-6 sm:p-10 md:p-12">
-                    {/* Header: Outline Number & Step Pill */}
+                  {/* LEFT HALF */}
+                  <div className="flex flex-col justify-between gap-5 3xl:gap-8 p-6 sm:p-8 lg:p-9 3xl:p-12">
                     <div className="flex items-start justify-between">
                       <span
-                        className="font-display text-[clamp(80px,9vw,150px)] leading-[0.8] select-none"
+                        className="font-display text-[clamp(44px,4.4vw,66px)] 3xl:text-[150px] leading-[0.82] 3xl:leading-[0.8] select-none"
                         style={{
-                          WebkitTextStroke: "2.5px var(--ink)",
+                          WebkitTextStroke: "2px var(--ink)",
                           color: "transparent",
                         }}
                       >
                         {step.stepIndex}
                       </span>
-                      <span className="font-mono mt-2 text-xs uppercase tracking-[0.14em] text-ink/60 font-bold">
+                      <span className="font-mono mt-1 3xl:mt-2 text-[11px] 3xl:text-xs uppercase tracking-[0.14em] text-ink/60 font-bold">
                         {step.stepNumberText}
                       </span>
                     </div>
 
-                    {/* Central Title + Cursive Subtitle */}
                     <div className="my-auto">
-                      <h3 className="font-display text-[clamp(64px,8vw,140px)] uppercase tracking-tight text-ink leading-[0.82]">
+                      <h3 className="font-display text-[clamp(36px,4vw,56px)] 3xl:text-[140px] uppercase tracking-tight text-ink leading-[0.86] 3xl:leading-[0.82]">
                         {step.title}
                       </h3>
-                      <div className="font-serif italic mt-1 text-[clamp(26px,2.6vw,40px)] text-ink/70 font-normal">
+                      <div className="font-serif italic mt-0.5 3xl:mt-1 text-[clamp(19px,1.8vw,26px)] 3xl:text-[40px] text-ink/70 font-normal">
                         {step.cursiveSubtitle}
                       </div>
 
-                      <p className="mt-5 max-w-[440px] font-sans text-base sm:text-lg text-ink/85 leading-relaxed">
+                      <p className="mt-3 3xl:mt-5 max-w-[400px] 3xl:max-w-[440px] font-sans text-sm sm:text-[15px] 3xl:text-lg text-ink/85 leading-relaxed">
                         {step.description}
                       </p>
 
-                      <div className="mt-6 flex flex-wrap gap-2">
+                      <div className="mt-4 3xl:mt-6 flex flex-wrap gap-1.5 3xl:gap-2">
                         {step.pills.map((pill, i) => (
                           <span
                             key={i}
-                            className="rounded-full border-2 border-ink px-3.5 py-1 font-mono text-xs sm:text-[13px] font-semibold text-ink bg-transparent"
+                            className="rounded-full border-2 border-ink px-3 3xl:px-3.5 py-0.5 3xl:py-1 font-mono text-[11px] 3xl:text-[13px] font-semibold text-ink bg-transparent"
                           >
                             {pill}
                           </span>
@@ -266,55 +225,50 @@ export const ProcessStackedFolderSection: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Subtle Tactile Hole Ring */}
-                    <div className="flex items-center justify-between pt-2">
-                      <div className="w-5 h-5 rounded-full border-2 border-ink/40 bg-transparent" />
+                    <div className="flex items-center justify-between pt-1 3xl:pt-2">
+                      <div className="w-4 h-4 3xl:w-5 3xl:h-5 rounded-full border-2 border-ink/40 bg-transparent" />
                       <span className="font-mono text-[10px] uppercase tracking-widest text-ink/40 font-bold">
                         PHASE {step.stepIndex} • KINETIC
                       </span>
                     </div>
                   </div>
 
-                  {/* RIGHT HALF (Loud Accent Color with Step-Specific Artwork) */}
+                  {/* RIGHT HALF */}
                   <div
-                    className="relative min-h-[340px] sm:min-h-[400px] md:min-h-[auto] overflow-hidden border-t-[3px] border-ink md:border-l-[3px] md:border-t-0 flex items-center justify-center p-6"
-                    style={{ background: step.accentHex }}
+                    className="relative min-h-[270px] sm:min-h-[310px] md:min-h-auto overflow-hidden border-t-[2.5px] 3xl:border-t-[3px] border-ink md:border-l-[2.5px] 3xl:md:border-l-[3px] md:border-t-0 flex items-center justify-center p-5 3xl:p-6"
+                    style={{ background: step.accentToken }}
                   >
-                    {/* STEP 01: DIG (Bar Chart + Magnifying Glass + "found the leak!" Sticker) */}
+                    {/* STEP 01: DIG */}
                     {idx === 0 && (
-                      <div className="relative h-[260px] w-[300px] flex items-center justify-center">
-                        {/* 5 Paper Bars */}
-                        <div className="absolute bottom-6 left-4 flex h-[180px] items-end gap-3">
-                          <div className="w-9 rounded-t-md border-2 border-ink bg-paper h-[60px]" />
-                          <div className="w-9 rounded-t-md border-2 border-ink bg-paper h-[110px]" />
-                          <div className="w-9 rounded-t-md border-2 border-ink bg-paper h-[80px]" />
-                          <div className="w-9 rounded-t-md border-2 border-ink bg-paper h-[150px]" />
-                          <div className="w-9 rounded-t-md border-2 border-ink bg-paper h-[40px]" />
+                      <div className="relative h-[220px] w-[260px] 3xl:scale-[1.18] flex items-center justify-center">
+                        <div className="absolute bottom-5 left-3 flex h-[150px] items-end gap-2.5">
+                          <div className="w-8 rounded-t-md border-2 border-ink bg-paper h-[50px]" />
+                          <div className="w-8 rounded-t-md border-2 border-ink bg-paper h-[92px]" />
+                          <div className="w-8 rounded-t-md border-2 border-ink bg-paper h-[68px]" />
+                          <div className="w-8 rounded-t-md border-2 border-ink bg-paper h-[126px]" />
+                          <div className="w-8 rounded-t-md border-2 border-ink bg-paper h-[34px]" />
                         </div>
 
-                        {/* Large Magnifying Glass Glass Ring */}
-                        <div className="absolute right-0 top-0 grid h-[140px] w-[140px] place-items-center rounded-full border-[6px] border-ink bg-white/70 shadow-brutal">
-                          <Search className="w-14 h-14 text-ink stroke-[2.5]" />
+                        <div className="absolute right-0 top-0 grid h-[116px] w-[116px] place-items-center rounded-full border-[5px] border-ink bg-paper/85 shadow-brutal">
+                          <Search className="w-11 h-11 text-ink stroke-[2.5]" />
                         </div>
 
-                        {/* Handwritten Sticker */}
-                        <span className="font-hand absolute bottom-1 right-2 rotate-[-6deg] text-[28px] text-ink font-bold">
+                        <span className="font-hand absolute bottom-0 right-2 rotate-[-6deg] text-[24px] text-ink font-bold">
                           found the leak!
                         </span>
                       </div>
                     )}
 
-                    {/* STEP 02: PLOT (4 Interactive Post-its with Orange Dashed String) */}
+                    {/* STEP 02: PLOT */}
                     {idx === 1 && (
-                      <div className="relative h-[280px] w-[330px] sticky-canvas-area select-none">
-                        {/* Orange Dashed Connector Path */}
+                      <div className="relative h-[240px] w-[290px] 3xl:scale-[1.15] sticky-canvas-area select-none">
                         <svg
                           className="pointer-events-none absolute inset-0 w-full h-full"
-                          viewBox="0 0 330 280"
+                          viewBox="0 0 290 240"
                           aria-hidden="true"
                         >
                           <path
-                            d="M 140 80 C 170 120 150 150 200 190"
+                            d="M 120 70 C 150 105 130 130 175 165"
                             stroke="var(--tomato)"
                             strokeWidth="3"
                             fill="none"
@@ -322,78 +276,70 @@ export const ProcessStackedFolderSection: React.FC = () => {
                           />
                         </svg>
 
-                        {/* 1. Search 40% (Yellow/Sun) */}
                         <div
-                          style={{ left: "10px", top: "20px" }}
-                          className="draggable-sticky-note absolute grid h-[120px] w-[130px] place-items-center whitespace-pre-line border-2 border-ink text-center text-[28px] sm:text-[30px] leading-[0.9] text-ink shadow-brutal bg-sun -rotate-6 cursor-grab active:cursor-grabbing"
+                          style={{ left: "8px", top: "14px" }}
+                          className="draggable-sticky-note absolute grid h-[100px] w-[112px] place-items-center whitespace-pre-line border-2 border-ink text-center text-[22px] leading-[0.92] text-ink shadow-brutal bg-sun -rotate-6 cursor-grab active:cursor-grabbing"
                         >
                           <span className="font-display uppercase font-black">Search{"\n"}40%</span>
                         </div>
 
-                        {/* 2. Reels 35% (Pink) */}
                         <div
-                          style={{ left: "170px", top: "0px" }}
-                          className="draggable-sticky-note absolute grid h-[120px] w-[130px] place-items-center whitespace-pre-line border-2 border-ink text-center text-[28px] sm:text-[30px] leading-[0.9] text-ink shadow-brutal bg-pink rotate-6 cursor-grab active:cursor-grabbing"
+                          style={{ left: "152px", top: "0px" }}
+                          className="draggable-sticky-note absolute grid h-[100px] w-[112px] place-items-center whitespace-pre-line border-2 border-ink text-center text-[22px] leading-[0.92] text-ink shadow-brutal bg-pink rotate-6 cursor-grab active:cursor-grabbing"
                         >
                           <span className="font-display uppercase font-black">Reels{"\n"}35%</span>
                         </div>
 
-                        {/* 3. Retarget 15% (Lime) */}
                         <div
-                          style={{ left: "40px", top: "150px" }}
-                          className="draggable-sticky-note absolute grid h-[120px] w-[130px] place-items-center whitespace-pre-line border-2 border-ink text-center text-[28px] sm:text-[30px] leading-[0.9] text-forest shadow-brutal bg-lime rotate-4 cursor-grab active:cursor-grabbing"
+                          style={{ left: "32px", top: "128px" }}
+                          className="draggable-sticky-note absolute grid h-[100px] w-[112px] place-items-center whitespace-pre-line border-2 border-ink text-center text-[22px] leading-[0.92] text-forest shadow-brutal bg-lime rotate-4 cursor-grab active:cursor-grabbing"
                         >
                           <span className="font-display uppercase font-black">Retarget{"\n"}15%</span>
                         </div>
 
-                        {/* 4. Tests 10% (Paper) */}
                         <div
-                          style={{ left: "190px", top: "150px" }}
-                          className="draggable-sticky-note absolute grid h-[120px] w-[130px] place-items-center whitespace-pre-line border-2 border-ink text-center text-[28px] sm:text-[30px] leading-[0.9] text-ink shadow-brutal bg-paper -rotate-4 cursor-grab active:cursor-grabbing"
+                          style={{ left: "168px", top: "128px" }}
+                          className="draggable-sticky-note absolute grid h-[100px] w-[112px] place-items-center whitespace-pre-line border-2 border-ink text-center text-[22px] leading-[0.92] text-ink shadow-brutal bg-paper -rotate-4 cursor-grab active:cursor-grabbing"
                         >
                           <span className="font-display uppercase font-black">Tests{"\n"}10%</span>
                         </div>
                       </div>
                     )}
 
-                    {/* STEP 03: MAKE (3 Overlapping Story Cards + Heart Badge) */}
+                    {/* STEP 03: MAKE */}
                     {idx === 2 && (
-                      <div className="relative h-[300px] w-[320px]">
-                        {/* Story Card 1: 40% OFF */}
+                      <div className="relative h-[245px] w-[285px] 3xl:scale-[1.18]">
                         <div
                           style={{ left: "0px" }}
-                          className="absolute top-6 h-[240px] w-[150px] rounded-[18px] border-2 border-ink p-2 shadow-brutal bg-paper -rotate-12"
+                          className="absolute top-4 h-[196px] w-[126px] rounded-[16px] border-2 border-ink p-1.5 shadow-brutal bg-paper -rotate-12"
                         >
-                          <div className="font-display grid h-full place-items-center whitespace-pre-line rounded-[12px] text-center text-[34px] leading-[0.85] bg-tomato text-ink font-black">
+                          <div className="font-display grid h-full place-items-center whitespace-pre-line rounded-[10px] text-center text-[26px] leading-[0.86] bg-tomato text-ink font-black">
                             40%{"\n"}OFF
                           </div>
                         </div>
 
-                        {/* Story Card 2: WAIT FOR IT */}
                         <div
-                          style={{ left: "80px" }}
-                          className="absolute top-6 h-[240px] w-[150px] rounded-[18px] border-2 border-ink p-2 shadow-brutal bg-paper -rotate-2 z-10"
+                          style={{ left: "72px" }}
+                          className="absolute top-4 h-[196px] w-[126px] rounded-[16px] border-2 border-ink p-1.5 shadow-brutal bg-paper -rotate-2 z-10"
                         >
-                          <div className="font-display grid h-full place-items-center whitespace-pre-line rounded-[12px] text-center text-[34px] leading-[0.85] bg-blue text-paper font-black">
+                          <div className="font-display grid h-full place-items-center whitespace-pre-line rounded-[10px] text-center text-[26px] leading-[0.86] bg-blue text-paper font-black">
                             WAIT{"\n"}FOR IT
                           </div>
                         </div>
 
-                        {/* Story Card 3: POV: YOU WON */}
                         <div
-                          style={{ left: "160px" }}
-                          className="absolute top-6 h-[240px] w-[150px] rounded-[18px] border-2 border-ink p-2 shadow-brutal bg-paper rotate-10"
+                          style={{ left: "144px" }}
+                          className="absolute top-4 h-[196px] w-[126px] rounded-[16px] border-2 border-ink p-1.5 shadow-brutal bg-paper rotate-10"
                         >
-                          <div className="font-display grid h-full place-items-center whitespace-pre-line rounded-[12px] text-center text-[34px] leading-[0.85] bg-sun text-ink font-black">
+                          <div className="font-display grid h-full place-items-center whitespace-pre-line rounded-[10px] text-center text-[26px] leading-[0.86] bg-sun text-ink font-black">
                             POV:{"\n"}YOU{"\n"}WON
                           </div>
                         </div>
 
-                        {/* Tomato Heart Badge */}
                         <svg
-                          className="absolute -right-2 bottom-2 text-tomato"
-                          width="44"
-                          height="44"
+                          className="absolute -right-1 bottom-1 text-tomato"
+                          width="38"
+                          height="38"
                           viewBox="0 0 24 24"
                           aria-hidden="true"
                         >
@@ -405,56 +351,39 @@ export const ProcessStackedFolderSection: React.FC = () => {
                       </div>
                     )}
 
-                    {/* STEP 04: LAUNCH (Paper Checklist Card with Lime Checks) */}
+                    {/* STEP 04: LAUNCH */}
                     {idx === 3 && (
-                      <div className="w-[300px] sm:w-[320px] rounded-[18px] border-2 border-ink bg-paper p-5 sm:p-6 shadow-brutal -rotate-3">
-                        <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink/60 font-bold">
+                      <div className="w-[260px] sm:w-[280px] 3xl:scale-[1.16] rounded-[16px] border-2 border-ink bg-paper p-4 sm:p-5 shadow-brutal -rotate-3">
+                        <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink/60 font-bold">
                           launch checklist
                         </div>
-                        <div className="mt-4 flex flex-col gap-3 font-sans text-sm sm:text-base font-bold text-ink">
-                          <div className="flex items-center gap-3">
-                            <span className="grid h-6 w-6 place-items-center rounded-md border-2 border-ink bg-lime text-forest text-xs font-black shrink-0">
-                              ✓
-                            </span>
-                            <span>Pixel + CAPI firing</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="grid h-6 w-6 place-items-center rounded-md border-2 border-ink bg-lime text-forest text-xs font-black shrink-0">
-                              ✓
-                            </span>
-                            <span>Conversions deduped</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="grid h-6 w-6 place-items-center rounded-md border-2 border-ink bg-lime text-forest text-xs font-black shrink-0">
-                              ✓
-                            </span>
-                            <span>UTMs on every ad</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="grid h-6 w-6 place-items-center rounded-md border-2 border-ink bg-lime text-forest text-xs font-black shrink-0">
-                              ✓
-                            </span>
-                            <span>Budgets paced</span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="grid h-6 w-6 place-items-center rounded-md border-2 border-ink bg-lime text-forest text-xs font-black shrink-0">
-                              ✓
-                            </span>
-                            <span>Naming that makes sense</span>
-                          </div>
+                        <div className="mt-3 flex flex-col gap-2.5 font-sans text-xs sm:text-sm font-bold text-ink">
+                          {[
+                            "Pixel + CAPI firing",
+                            "Conversions deduped",
+                            "UTMs on every ad",
+                            "Budgets paced",
+                            "Naming that makes sense",
+                          ].map((label, cIdx) => (
+                            <div key={cIdx} className="flex items-center gap-2.5">
+                              <span className="grid h-5 w-5 place-items-center rounded-md border-2 border-ink bg-lime text-forest text-[11px] font-black shrink-0">
+                                ✓
+                              </span>
+                              <span>{label}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     )}
 
-                    {/* STEP 05: SCALE (Revenue Chart + Star Badge + 2.7x YOY Pill) */}
+                    {/* STEP 05: SCALE */}
                     {idx === 4 && (
-                      <div className="relative h-[260px] w-[min(340px,75vw)] rounded-[18px] border-2 border-ink bg-paper p-5 shadow-brutal rotate-3">
-                        <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink/60 font-bold">
+                      <div className="relative h-[220px] w-[min(295px,75vw)] 3xl:scale-[1.16] rounded-[16px] border-2 border-ink bg-paper p-4 shadow-brutal rotate-3">
+                        <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink/60 font-bold">
                           revenue, last 90 days
                         </div>
 
-                        {/* Revenue Curve Chart */}
-                        <svg viewBox="0 0 300 170" className="mt-2 h-[150px] w-full" aria-hidden="true">
+                        <svg viewBox="0 0 300 170" className="mt-1.5 h-[125px] w-full" aria-hidden="true">
                           <path
                             d="M0 160 L40 150 L80 152 L120 120 L160 126 L200 80 L240 70 L300 10 L300 170 L0 170Z"
                             fill="var(--lime)"
@@ -472,9 +401,8 @@ export const ProcessStackedFolderSection: React.FC = () => {
                           <circle cx="300" cy="10" r="6" fill="var(--tomato)" stroke="var(--ink)" strokeWidth="2" />
                         </svg>
 
-                        {/* Tomato Star Badge Top-Right */}
-                        <div className="absolute -right-4 -top-5 grid h-16 w-16 place-items-center rounded-full border-2 border-ink bg-tomato text-paper shadow-brutal">
-                          <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">
+                        <div className="absolute -right-3 -top-4 grid h-12 w-12 place-items-center rounded-full border-2 border-ink bg-tomato text-paper shadow-brutal">
+                          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
                             <path
                               fill="currentColor"
                               d="M12 0c.6 5.6 2.2 8.6 4.5 10s3.9 1.6 7.5 2c-3.6.4-5.2.6-7.5 2S12.6 18.4 12 24c-.6-5.6-2.2-8.6-4.5-10S3.6 12.4 0 12c3.6-.4 5.2-.6 7.5-2S11.4 5.6 12 0Z"
@@ -482,8 +410,7 @@ export const ProcessStackedFolderSection: React.FC = () => {
                           </svg>
                         </div>
 
-                        {/* 2.7x YOY Pill Badge Bottom-Left */}
-                        <span className="font-display absolute -bottom-4 left-6 rounded-full border-2 border-ink bg-sun px-4 py-1 text-lg text-ink shadow-brutal-sm">
+                        <span className="font-display absolute -bottom-3.5 left-5 rounded-full border-2 border-ink bg-sun px-3.5 py-0.5 text-base text-ink shadow-brutal-sm">
                           2.7x yoy
                         </span>
                       </div>

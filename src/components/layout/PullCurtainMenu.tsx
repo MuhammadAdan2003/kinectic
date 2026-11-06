@@ -88,7 +88,7 @@ export const PullCurtainMenu: React.FC = () => {
       ref={curtainRef}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="fixed inset-0 z-[160] bg-lime text-forest flex flex-col justify-between p-[var(--gutter)] pt-16 md:pt-20 border-b-4 border-ink overflow-y-auto transform-gpu select-none"
+      className="fixed inset-0 z-160 bg-lime text-forest flex flex-col justify-between p-[var(--gutter)] pt-16 md:pt-20 border-b-4 border-ink overflow-y-auto transform-gpu select-none"
     >
       {/* Top Header inside Curtain */}
       <div className="flex items-center justify-between border-b-2 border-forest/30 pb-6">
@@ -113,7 +113,7 @@ export const PullCurtainMenu: React.FC = () => {
       {/* Big Route Links */}
       <div
         ref={linksContainerRef}
-        className="my-auto py-8 sm:py-10 flex flex-col gap-3 sm:gap-4 md:gap-6"
+        className="my-auto py-4 sm:py-6 3xl:py-10 flex flex-col gap-2 sm:gap-2.5 md:gap-3 3xl:gap-5"
       >
         {siteConfig.navRoutes.map((route) => (
           <div key={route.path} className="group">
@@ -121,15 +121,15 @@ export const PullCurtainMenu: React.FC = () => {
               to={route.path}
               transitionTitle={route.transitionTitle}
               onClick={() => setIsMenuOpen(false)}
-              className="flex items-baseline gap-3 sm:gap-4 md:gap-8 group-hover:translate-x-3 transition-transform"
+              className="flex items-baseline gap-3 sm:gap-5 3xl:gap-8 group-hover:translate-x-3 transition-transform"
             >
-              <span className="font-mono text-sm sm:text-base md:text-xl font-bold opacity-60">
+              <span className="font-mono text-xs sm:text-sm 3xl:text-xl font-bold opacity-60">
                 ({route.index})
               </span>
-              <span className="font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl uppercase tracking-tight leading-none group-hover:underline underline-offset-8">
+              <span className="font-display text-[clamp(28px,4vw,54px)] 3xl:text-8xl uppercase tracking-tight leading-[0.95] 3xl:leading-none group-hover:underline underline-offset-4 3xl:underline-offset-8">
                 {route.label}
               </span>
-              <ArrowUpRight className="w-6 h-6 sm:w-8 sm:h-8 md:w-14 md:h-14 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowUpRight className="w-5 h-5 sm:w-7 sm:h-7 3xl:w-14 3xl:h-14 opacity-0 group-hover:opacity-100 transition-opacity" />
             </TransitionLink>
           </div>
         ))}
@@ -140,15 +140,15 @@ export const PullCurtainMenu: React.FC = () => {
             to="/#work"
             transitionTitle="SELECTED WORK"
             onClick={() => setIsMenuOpen(false)}
-            className="flex items-baseline gap-3 sm:gap-4 md:gap-8 group-hover:translate-x-3 transition-transform"
+            className="flex items-baseline gap-3 sm:gap-5 3xl:gap-8 group-hover:translate-x-3 transition-transform"
           >
-            <span className="font-mono text-sm sm:text-base md:text-xl font-bold opacity-60">
-              (04)
+            <span className="font-mono text-xs sm:text-sm 3xl:text-xl font-bold opacity-60">
+              (06)
             </span>
-            <span className="font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl uppercase tracking-tight leading-none group-hover:underline underline-offset-8">
+            <span className="font-display text-[clamp(28px,4vw,54px)] 3xl:text-8xl uppercase tracking-tight leading-[0.95] 3xl:leading-none group-hover:underline underline-offset-4 3xl:underline-offset-8">
               Work
             </span>
-            <ArrowUpRight className="w-6 h-6 sm:w-8 sm:h-8 md:w-14 md:h-14 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <ArrowUpRight className="w-5 h-5 sm:w-7 sm:h-7 3xl:w-14 3xl:h-14 opacity-0 group-hover:opacity-100 transition-opacity" />
           </TransitionLink>
         </div>
       </div>

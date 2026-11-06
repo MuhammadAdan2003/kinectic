@@ -108,15 +108,30 @@ export const MobilePullDownTab: React.FC<MobilePullDownTabProps> = ({
     [updatePosition]
   );
 
-  // Window-level pointer release handler (GUARANTEES return to top ceiling)
+  // Window-level pointer release & cancel handlers (GUARANTEES return to top ceiling)
+  const cleanupWindowListenersRef = useRef<() => void>(() => {});
+
+  const handleWindowPointerCancel = useCallback(() => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    cleanupWindowListenersRef.current();
+
+    const animObj = { y: currentYRef.current, x: currentXRef.current };
+    gsap.to(animObj, {
+      y: 0,
+      x: 0,
+      duration: 0.5,
+      ease: "elastic.out(1.1, 0.4)",
+      onUpdate: () => updatePosition(animObj.y, animObj.x),
+      onComplete: () => updatePosition(0, 0),
+    });
+  }, [updatePosition]);
+
   const handleWindowPointerUp = useCallback(
     (e: PointerEvent) => {
       if (!isDraggingRef.current) return;
       isDraggingRef.current = false;
-
-      window.removeEventListener("pointermove", handleWindowPointerMove);
-      window.removeEventListener("pointerup", handleWindowPointerUp);
-      window.removeEventListener("pointercancel", handleWindowPointerCancel);
+      cleanupWindowListenersRef.current();
 
       const rawDeltaY = e.clientY - startYRef.current;
       const timeTaken = Date.now() - startTimeRef.current;
@@ -175,28 +190,16 @@ export const MobilePullDownTab: React.FC<MobilePullDownTabProps> = ({
         onComplete: () => updatePosition(0, 0),
       });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [handleWindowPointerMove, onOpen, updatePosition]
+    [onOpen, updatePosition]
   );
 
-  const handleWindowPointerCancel = useCallback(() => {
-    if (!isDraggingRef.current) return;
-    isDraggingRef.current = false;
-
-    window.removeEventListener("pointermove", handleWindowPointerMove);
-    window.removeEventListener("pointerup", handleWindowPointerUp);
-    window.removeEventListener("pointercancel", handleWindowPointerCancel);
-
-    const animObj = { y: currentYRef.current, x: currentXRef.current };
-    gsap.to(animObj, {
-      y: 0,
-      x: 0,
-      duration: 0.5,
-      ease: "elastic.out(1.1, 0.4)",
-      onUpdate: () => updatePosition(animObj.y, animObj.x),
-      onComplete: () => updatePosition(0, 0),
-    });
-  }, [handleWindowPointerMove, handleWindowPointerUp, updatePosition]);
+  useEffect(() => {
+    cleanupWindowListenersRef.current = () => {
+      window.removeEventListener("pointermove", handleWindowPointerMove);
+      window.removeEventListener("pointerup", handleWindowPointerUp);
+      window.removeEventListener("pointercancel", handleWindowPointerCancel);
+    };
+  }, [handleWindowPointerMove, handleWindowPointerUp, handleWindowPointerCancel]);
 
   // Pointer down initiates the elastic pull
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -231,7 +234,7 @@ export const MobilePullDownTab: React.FC<MobilePullDownTabProps> = ({
     <div
       ref={containerRef}
       className={cn(
-        "fixed top-0 left-1/2 -translate-x-1/2 z-[115] select-none flex flex-col items-center pointer-events-none",
+        "fixed top-0 left-1/2 -translate-x-1/2 z-115 select-none flex flex-col items-center pointer-events-none",
         className
       )}
     >

@@ -32,7 +32,7 @@ const BUBBLES: BubbleSpec[] = [
 ];
 
 const toneClasses: Record<BubbleSpec["tone"], { bg: string; text: string }> = {
-  tomato: { bg: "bg-tomato", text: "text-paper" },
+  tomato: { bg: "bg-tomato", text: "text-ink" },
   pink:   { bg: "bg-pink",   text: "text-ink" },
   sun:    { bg: "bg-sun",    text: "text-ink" },
   lime:   { bg: "bg-lime",   text: "text-forest" },
